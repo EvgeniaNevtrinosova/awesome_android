@@ -1,3 +1,6 @@
 <resources>
     <string name="app_name">awesome_android</string>
+    <string name="enter_ingredient">Выберите ингредиенты:</string>
+    <string name="add">Добавить</string>
+    <string name="add_button">+</string>
 </resources>
