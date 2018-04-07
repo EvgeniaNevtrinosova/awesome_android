@@ -28,13 +28,11 @@
         android:layout_height="wrap_content"
         android:text="@string/add_button" />
 
-    <TextView
-        android:id="@+id/ingredient_name"
+    <LinearLayout
+        android:id="@+id/add_ingredient_layout"
         android:layout_width="match_parent"
-        android:layout_height="380dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:textSize="25sp" />
-
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+    </LinearLayout>
 
 </LinearLayout>
