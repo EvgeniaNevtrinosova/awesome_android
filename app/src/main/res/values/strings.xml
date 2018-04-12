@@ -3,4 +3,7 @@
     <string name="enter_ingredient">Выберите ингредиенты:</string>
     <string name="add">Добавить</string>
     <string name="add_button">+</string>
+    <string name="search">Найти рецепт</string>
+    <string name="remove">-</string>
+    <string name="delete"></string>
 </resources>

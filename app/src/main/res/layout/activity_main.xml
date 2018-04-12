@@ -31,8 +31,13 @@
     <LinearLayout
         android:id="@+id/add_ingredient_layout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
-    </LinearLayout>
+        android:layout_height="331dp"
+        android:orientation="vertical"></LinearLayout>
+
+    <Button
+        android:id="@+id/search_recipe"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/search" />
 
 </LinearLayout>
