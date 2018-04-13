@@ -6,4 +6,5 @@
     <string name="search">Найти рецепт</string>
     <string name="remove">-</string>
     <string name="delete"></string>
+    <string name="recipe_what_you_need">Вот рецепты, которые вам подойдут:</string>
 </resources>

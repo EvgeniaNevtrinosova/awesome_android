@@ -3,6 +3,7 @@ package ru.mail.park.awesome_android;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -64,6 +65,11 @@ public class EnterFragment extends Fragment {
             gson.toJson(ingredients);
 
 //            Log.i("GSON", gson.toJson(ingredients));
+
+            FragmentManager fragmentManager = getFragmentManager();
+            fragmentManager.beginTransaction()
+                    .replace(R.id.fragmentContainer, RecipesListFragment.newInstance())
+                    .commit();
 
         }
     };
