@@ -13,10 +13,13 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
 import com.google.gson.Gson;
-
+import java.io.IOException;
 import java.util.ArrayList;
+import retrofit2.Call;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 
 public class EnterFragment extends Fragment {
@@ -29,30 +32,32 @@ public class EnterFragment extends Fragment {
     private ArrayList ingredientsArray = new ArrayList();
 
     private String ingredient;
-    
+
     public static EnterFragment newInstance() {
-        
+
         Bundle args = new Bundle();
-        
+
         EnterFragment fragment = new EnterFragment();
         fragment.setArguments(args);
         return fragment;
     }
 
+
+
     private View.OnClickListener onRemoveButtonClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            LinearLayout parent = (LinearLayout)((LinearLayout)v.getParent()).getParent();
-            LinearLayout childLayoutWithButton = (LinearLayout)v.getParent();
-            TextView childText = (TextView)parent.getChildAt(0);
+            LinearLayout parent = (LinearLayout) ((LinearLayout) v.getParent()).getParent();
+            LinearLayout childLayoutWithButton = (LinearLayout) v.getParent();
+            TextView childText = (TextView) parent.getChildAt(0);
 
             String ingr = childText.getText().toString();
 
             ingredientsArray.remove(ingr);
 
-            ((ViewManager)parent).removeView(childText);
-            ((ViewManager)parent).removeView(childLayoutWithButton);
-            ((ViewManager)parent).removeView(parent);
+            ((ViewManager) parent).removeView(childText);
+            ((ViewManager) parent).removeView(childLayoutWithButton);
+            ((ViewManager) parent).removeView(parent);
         }
     };
 
@@ -64,7 +69,29 @@ public class EnterFragment extends Fragment {
             ingredients.setIngredients(ingredientsArray);
             gson.toJson(ingredients);
 
-//            Log.i("GSON", gson.toJson(ingredients));
+
+            Retrofit retrofit = new Retrofit.Builder()
+                    .baseUrl("https://food-node.herokuapp.com/")
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .build();
+
+            Service service = retrofit.create(Service.class);
+
+            final Call<Recipe[]> call = service.getRecipe();
+
+            Thread thread = new Thread(new Runnable() {
+                public void run() {
+                    try {
+                        Response<Recipe[]> response = call.execute();
+
+                        Recipe[] recipesArray = response.body();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+
+            thread.start();
 
             FragmentManager fragmentManager = getFragmentManager();
             fragmentManager.beginTransaction()
@@ -81,10 +108,10 @@ public class EnterFragment extends Fragment {
             ingredient = enterIngredient.getText().toString();
             ingredientsArray.add(ingredient);
 
-            if (ingredient.length() == 0)  {
+            if (ingredient.length() == 0) {
                 return;
             }
-            enterIngredient.setText(R.string.delete); //убрать хардкод
+            enterIngredient.setText(R.string.delete);
 
             LinearLayout layoutWithIngredientAndButton = new LinearLayout(getActivity());
             layoutWithIngredientAndButton.setOrientation(LinearLayout.HORIZONTAL);
@@ -108,8 +135,6 @@ public class EnterFragment extends Fragment {
             layoutWithIngredientAndButton.addView(layoutWithButton);
 
             addedIngredients.addView(layoutWithIngredientAndButton);
-
-
         }
     };
 
