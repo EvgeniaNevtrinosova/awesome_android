@@ -10,6 +10,8 @@ import android.view.ViewGroup;
 
 public class RecipesListFragment extends Fragment {
 
+//    public static final Arra
+
     public static RecipesListFragment newInstance() {
 
         Bundle args = new Bundle();

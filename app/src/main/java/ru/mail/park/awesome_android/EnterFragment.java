@@ -14,8 +14,15 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonSyntaxException;
+import com.google.gson.reflect.TypeToken;
 import java.io.IOException;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.List;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Response;
 import retrofit2.Retrofit;
@@ -27,11 +34,12 @@ public class EnterFragment extends Fragment {
     private Button searchButton;
     private EditText enterIngredient;
     private LinearLayout addedIngredients;
-
-    private Ingredients ingredients = new Ingredients();
     private ArrayList ingredientsArray = new ArrayList();
 
     private String ingredient;
+
+    private static final Gson GSON = new GsonBuilder()
+            .create();
 
     public static EnterFragment newInstance() {
 
@@ -64,11 +72,8 @@ public class EnterFragment extends Fragment {
     private View.OnClickListener onSearchButtonClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            Gson gson = new Gson();
-
-            ingredients.setIngredients(ingredientsArray);
-            gson.toJson(ingredients);
-
+            JsonObject json = new JsonObject();
+            json.addProperty("products", String.valueOf(ingredientsArray));
 
             Retrofit retrofit = new Retrofit.Builder()
                     .baseUrl("https://food-node.herokuapp.com/")
@@ -76,21 +81,25 @@ public class EnterFragment extends Fragment {
                     .build();
 
             Service service = retrofit.create(Service.class);
-
-            final Call<Recipe[]> call = service.getRecipe();
+            final Call<ResponseBody> post = service.setIngredients(json);
 
             Thread thread = new Thread(new Runnable() {
                 public void run() {
                     try {
-                        Response<Recipe[]> response = call.execute();
+                        Response<ResponseBody> response = post.execute();
 
-                        Recipe[] recipesArray = response.body();
+                        try(final ResponseBody responseBody = response.body()) {
+                            if (responseBody == null) {
+                                throw new IOException("Cannot get body");
+                            }
+                            final String body = responseBody.string();
+                            final List<Recipe> getRecipes = parseRecipe(body);
+                        }
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
                 }
             });
-
             thread.start();
 
             FragmentManager fragmentManager = getFragmentManager();
@@ -137,6 +146,16 @@ public class EnterFragment extends Fragment {
             addedIngredients.addView(layoutWithIngredientAndButton);
         }
     };
+
+    public List<Recipe> parseRecipe(final String body) throws IOException {
+        try {
+            Type listType = new TypeToken<List<Recipe>>(){}.getType();
+            return (List<Recipe>)GSON.fromJson(body, listType);
+        } catch (JsonSyntaxException e) {
+            throw new IOException(e);
+        }
+    }
+
 
 
     @Nullable
