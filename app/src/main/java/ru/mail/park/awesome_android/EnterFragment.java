@@ -1,9 +1,11 @@
 package ru.mail.park.awesome_android;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -37,6 +39,7 @@ public class EnterFragment extends Fragment {
     private ArrayList ingredientsArray = new ArrayList();
 
     private String ingredient;
+
 
     private static final Gson GSON = new GsonBuilder()
             .create();
@@ -94,6 +97,19 @@ public class EnterFragment extends Fragment {
                             }
                             final String body = responseBody.string();
                             final List<Recipe> getRecipes = parseRecipe(body);
+
+                            Fragment f = new RecipesListFragment();
+                            Bundle bundle = new Bundle();
+                            bundle.putInt("size", getRecipes.size());
+                            for (int i = 0; i < getRecipes.size(); i++) {
+                                bundle.putSerializable("recipe " + i, getRecipes.get(i));
+                            }
+
+                            f.setArguments(bundle);
+                            FragmentManager fragmentManager = getFragmentManager();
+                            fragmentManager.beginTransaction()
+                                    .replace(R.id.fragmentContainer, f)
+                                    .commit();
                         }
                     } catch (IOException e) {
                         e.printStackTrace();
@@ -102,10 +118,8 @@ public class EnterFragment extends Fragment {
             });
             thread.start();
 
-            FragmentManager fragmentManager = getFragmentManager();
-            fragmentManager.beginTransaction()
-                    .replace(R.id.fragmentContainer, RecipesListFragment.newInstance())
-                    .commit();
+
+
 
         }
     };
