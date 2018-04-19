@@ -14,12 +14,10 @@
         android:textSize="18sp"
         android:hint="@string/recipe_what_you_need"/>
 
-    <FrameLayout
+    <LinearLayout
         android:id="@+id/list_of_recipes"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        />
+        android:layout_height="487dp"
+        android:orientation="vertical"></LinearLayout>
 
 </LinearLayout>

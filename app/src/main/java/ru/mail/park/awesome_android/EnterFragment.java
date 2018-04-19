@@ -45,9 +45,7 @@ public class EnterFragment extends Fragment {
             .create();
 
     public static EnterFragment newInstance() {
-
         Bundle args = new Bundle();
-
         EnterFragment fragment = new EnterFragment();
         fragment.setArguments(args);
         return fragment;
@@ -117,10 +115,6 @@ public class EnterFragment extends Fragment {
                 }
             });
             thread.start();
-
-
-
-
         }
     };
 
@@ -147,7 +141,6 @@ public class EnterFragment extends Fragment {
             remove.setWidth(200);
             remove.setOnClickListener(onRemoveButtonClickListener);
             layoutWithButton.addView(remove);
-
 
             TextView text = new TextView(getActivity());
             text.setText(ingredient);
