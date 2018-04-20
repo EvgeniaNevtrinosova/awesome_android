@@ -49,11 +49,4 @@ public class Recipe implements Serializable{
         this.text = text;
     }
 
-//    public Recipe(Parcel in){
-//        String[] data = new String[3];
-//        in.readStringArray(data);
-//
-//        this.name = data[0];
-//
-//    }
 }

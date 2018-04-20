@@ -1,6 +1,5 @@
 package ru.mail.park.awesome_android;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -15,6 +14,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
@@ -37,10 +37,7 @@ public class EnterFragment extends Fragment {
     private EditText enterIngredient;
     private LinearLayout addedIngredients;
     private ArrayList ingredientsArray = new ArrayList();
-
     private String ingredient;
-
-
     private static final Gson GSON = new GsonBuilder()
             .create();
 
@@ -51,8 +48,6 @@ public class EnterFragment extends Fragment {
         return fragment;
     }
 
-
-
     private View.OnClickListener onRemoveButtonClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
@@ -60,9 +55,8 @@ public class EnterFragment extends Fragment {
             LinearLayout childLayoutWithButton = (LinearLayout) v.getParent();
             TextView childText = (TextView) parent.getChildAt(0);
 
-            String ingr = childText.getText().toString();
-
-            ingredientsArray.remove(ingr);
+            String removeIngredient = childText.getText().toString();
+            ingredientsArray.remove(removeIngredient);
 
             ((ViewManager) parent).removeView(childText);
             ((ViewManager) parent).removeView(childLayoutWithButton);
@@ -91,26 +85,30 @@ public class EnterFragment extends Fragment {
 
                         try(final ResponseBody responseBody = response.body()) {
                             if (responseBody == null) {
+                                Toast errorMessage = Toast.makeText(getContext(), R.string.error_message, Toast.LENGTH_SHORT);
+                                errorMessage.show();
                                 throw new IOException("Cannot get body");
                             }
                             final String body = responseBody.string();
                             final List<Recipe> getRecipes = parseRecipe(body);
 
-                            Fragment f = new RecipesListFragment();
+                            Fragment recipesListFragment = new RecipesListFragment();
                             Bundle bundle = new Bundle();
+
                             bundle.putInt("size", getRecipes.size());
                             for (int i = 0; i < getRecipes.size(); i++) {
                                 bundle.putSerializable("recipe " + i, getRecipes.get(i));
                             }
 
-                            f.setArguments(bundle);
+                            recipesListFragment.setArguments(bundle);
                             FragmentManager fragmentManager = getFragmentManager();
                             fragmentManager.beginTransaction()
-                                    .replace(R.id.fragmentContainer, f)
+                                    .replace(R.id.fragmentContainer, recipesListFragment)
                                     .commit();
                         }
                     } catch (IOException e) {
-                        e.printStackTrace();
+                        Toast errorMessage = Toast.makeText(getContext(), R.string.error_message, Toast.LENGTH_SHORT);
+                        errorMessage.show();
                     }
                 }
             });
@@ -128,7 +126,7 @@ public class EnterFragment extends Fragment {
             if (ingredient.length() == 0) {
                 return;
             }
-            enterIngredient.setText(R.string.delete);
+            enterIngredient.setText(R.string.empty_string);
 
             LinearLayout layoutWithIngredientAndButton = new LinearLayout(getActivity());
             layoutWithIngredientAndButton.setOrientation(LinearLayout.HORIZONTAL);
@@ -137,7 +135,7 @@ public class EnterFragment extends Fragment {
             layoutWithButton.setGravity(Gravity.RIGHT);
 
             Button remove = new Button(getActivity());
-            remove.setText(R.string.remove); //убрать хардкод
+            remove.setText(R.string.remove);
             remove.setWidth(200);
             remove.setOnClickListener(onRemoveButtonClickListener);
             layoutWithButton.addView(remove);
@@ -145,7 +143,7 @@ public class EnterFragment extends Fragment {
             TextView text = new TextView(getActivity());
             text.setText(ingredient);
             text.setGravity(Gravity.LEFT);
-            text.setTextSize(20); //убрать хардкод
+            text.setTextSize(20);
             text.setWidth(800);
             layoutWithIngredientAndButton.addView(text);
             layoutWithIngredientAndButton.addView(layoutWithButton);
@@ -162,8 +160,6 @@ public class EnterFragment extends Fragment {
             throw new IOException(e);
         }
     }
-
-
 
     @Nullable
     @Override

@@ -11,6 +11,7 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -20,32 +21,35 @@ import java.util.Map;
 
 public class RecipesListFragment extends Fragment {
     private LinearLayout recipeLayout;
+    private ArrayList<Recipe> recipes = new ArrayList<>();
 
     private void writeListOfRecipes(ArrayList<Recipe> recipes) {
-        for (int i = 0; i < recipes.size(); i++) {
+        for (Recipe recipe: recipes) {
             LinearLayout recipeTitle = new LinearLayout(getActivity());
             recipeTitle.setOrientation(LinearLayout.VERTICAL);
 
             TextView name = new TextView(getActivity());
-            name.setText(recipes.get(i).getName());
+            name.setText(recipe.getName());
             name.setGravity(Gravity.LEFT);
-            name.setTextSize(20); //убрать хардкод
+            name.setTextSize(20);
             name.setWidth(800);
             recipeTitle.addView(name);
 
             TextView products = new TextView(getActivity());
-            Map<String, String> productsArray = new HashMap<String, String>();
-            productsArray = recipes.get(i).getProducts();
+            Map<String, String> productsMap = new HashMap<String, String>();
+            productsMap = recipe.getProducts();
             StringBuilder listOfProducts = new StringBuilder();
 
-            for (Map.Entry entry: productsArray.entrySet()) {
-                listOfProducts.append(entry.getKey()).append('-').append(entry.getValue()).append(',');
-
+            String prefix = "";
+            for (Map.Entry entry: productsMap.entrySet()) {
+                listOfProducts.append(prefix);
+                prefix = ",";
+                listOfProducts.append(entry.getKey()).append('-').append(entry.getValue());
             }
 
             products.setText(listOfProducts.toString());
             products.setGravity(Gravity.LEFT);
-            products.setTextSize(20); //убрать хардкод
+            products.setTextSize(20);
             products.setWidth(1000);
             recipeTitle.addView(products);
 
@@ -53,29 +57,32 @@ public class RecipesListFragment extends Fragment {
         }
     }
 
+    private void formingRecipesList() {
+        ArrayList recipesFromServer = new ArrayList();
+        Bundle bundle = getArguments();
+        for (int i = 0; i < bundle.getInt("size"); i++) {
+            try {
+                recipesFromServer.add(bundle.getSerializable("recipe " + i));
+            } catch (final Exception e) {
+                Toast errorMessage = Toast.makeText(getContext(), R.string.error_message, Toast.LENGTH_SHORT);
+                errorMessage.show();
+            }
+        }
+
+        for (int i = 0; i < recipesFromServer.size(); i++) {
+            Recipe recipe = (Recipe) recipesFromServer.get(i);
+            recipes.add(recipe);
+        }
+    }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.get_list_fr, container, false);
-        ArrayList getRecipes = new ArrayList();
+
         recipeLayout = v.findViewById(R.id.list_of_recipes);
 
-        Bundle bundle = getArguments();
-        for (int i = 0; i < bundle.getInt("size"); i++) {
-            try {
-                getRecipes.add(bundle.getSerializable("recipe " + i));
-            } catch (final Exception e) {
-                //
-            }
-        }
-
-        ArrayList<Recipe> recipes = new ArrayList<>();
-        for (int i = 0; i < getRecipes.size(); i++) {
-            Recipe recipe = (Recipe) getRecipes.get(i);
-            recipes.add(recipe);
-        }
-
+        formingRecipesList();
         writeListOfRecipes(recipes);
         return v;
     }
