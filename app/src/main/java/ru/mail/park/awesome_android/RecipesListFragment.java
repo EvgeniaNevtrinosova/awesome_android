@@ -1,8 +1,11 @@
 package ru.mail.park.awesome_android;
 
+import android.graphics.drawable.GradientDrawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,10 +26,32 @@ public class RecipesListFragment extends Fragment {
     private LinearLayout recipeLayout;
     private ArrayList<Recipe> recipes = new ArrayList<>();
 
+    private void setOnClick(final LinearLayout layout, final Recipe recipe){
+        layout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("recipe", recipe);
+                Fragment recipeInformationFragment = new RecipeInformationFragment();
+                recipeInformationFragment.setArguments(bundle);
+                FragmentManager fragmentManager = getFragmentManager();
+                fragmentManager.beginTransaction()
+                        .replace(R.id.fragmentContainer, recipeInformationFragment)
+                        .commit();
+            }
+        });
+    }
+
     private void writeListOfRecipes(ArrayList<Recipe> recipes) {
         for (Recipe recipe: recipes) {
             LinearLayout recipeTitle = new LinearLayout(getActivity());
             recipeTitle.setOrientation(LinearLayout.VERTICAL);
+            recipeTitle.setClickable(true);
+
+            GradientDrawable border = new GradientDrawable();
+            border.setColor(0xFFFFFFFF);
+            border.setStroke(10, 0xFF000000);
+            recipeTitle.setBackground(border);
 
             TextView name = new TextView(getActivity());
             name.setText(recipe.getName());
@@ -52,6 +77,8 @@ public class RecipesListFragment extends Fragment {
             products.setTextSize(20);
             products.setWidth(1000);
             recipeTitle.addView(products);
+
+            setOnClick(recipeTitle, recipe);
 
             recipeLayout.addView(recipeTitle);
         }
