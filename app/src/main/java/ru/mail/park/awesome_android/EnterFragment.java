@@ -10,6 +10,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewManager;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -34,12 +36,14 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class EnterFragment extends Fragment {
     private Button addButton;
     private Button searchButton;
-    private EditText enterIngredient;
+    private AutoCompleteTextView enterIngredient;
     private LinearLayout addedIngredients;
     private ArrayList ingredientsArray = new ArrayList();
     private String ingredient;
     private static final Gson GSON = new GsonBuilder()
             .create();
+
+    private String[] autoCompleteArray = {"Огурец", "Помидор", "Картошка", "Моркошка"};
 
     public static EnterFragment newInstance() {
         Bundle args = new Bundle();
@@ -104,6 +108,7 @@ public class EnterFragment extends Fragment {
                             FragmentManager fragmentManager = getFragmentManager();
                             fragmentManager.beginTransaction()
                                     .replace(R.id.fragmentContainer, recipesListFragment)
+                                    .addToBackStack(null)
                                     .commit();
                         }
                     } catch (IOException e) {
@@ -164,9 +169,14 @@ public class EnterFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         View v = inflater.inflate(R.layout.enter_fr, container, false);
 
+
         enterIngredient = v.findViewById(R.id.ingredient);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_dropdown_item_1line, autoCompleteArray);
+        enterIngredient.setAdapter(adapter);
+
         addButton = v.findViewById(R.id.add_button);
         searchButton = v.findViewById(R.id.search_recipe);
 

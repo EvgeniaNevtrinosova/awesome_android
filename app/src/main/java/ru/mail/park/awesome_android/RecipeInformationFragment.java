@@ -52,6 +52,7 @@ public class RecipeInformationFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         View v = inflater.inflate(R.layout.info_recipe_fr, container, false);
 
         recipeName = v.findViewById(R.id.recipe_name);

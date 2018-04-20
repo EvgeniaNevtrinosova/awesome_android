@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -34,9 +36,15 @@ public class RecipesListFragment extends Fragment {
                 bundle.putSerializable("recipe", recipe);
                 Fragment recipeInformationFragment = new RecipeInformationFragment();
                 recipeInformationFragment.setArguments(bundle);
+
                 FragmentManager fragmentManager = getFragmentManager();
-                fragmentManager.beginTransaction()
+                FragmentTransaction transaction = fragmentManager.beginTransaction();
+
+                //transaction.remove(fragmentManager.findFragmentById(R.id.fragmentContainer));
+
+                transaction
                         .replace(R.id.fragmentContainer, recipeInformationFragment)
+                        .addToBackStack(null)
                         .commit();
             }
         });
@@ -52,6 +60,7 @@ public class RecipesListFragment extends Fragment {
             border.setColor(0xFFFFFFFF);
             border.setStroke(10, 0xFF000000);
             recipeTitle.setBackground(border);
+            recipeTitle.setTop(100);
 
             TextView name = new TextView(getActivity());
             name.setText(recipe.getName());
@@ -105,12 +114,18 @@ public class RecipesListFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         View v = inflater.inflate(R.layout.get_list_fr, container, false);
 
         recipeLayout = v.findViewById(R.id.list_of_recipes);
 
-        formingRecipesList();
+
+        if (recipes.isEmpty()) {
+            formingRecipesList();
+        }
+
         writeListOfRecipes(recipes);
+
         return v;
     }
 }
