@@ -32,7 +32,6 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-
 public class EnterFragment extends Fragment {
     private Button addButton;
     private Button searchButton;
@@ -93,7 +92,10 @@ public class EnterFragment extends Fragment {
                                 errorMessage.show();
                                 throw new IOException("Cannot get body");
                             }
-                            final String body = responseBody.string();
+                           // final String body = responseBody.string();
+                            final String body = "[{\"name\":\"student pack\",\"products\":{\"дошик\" : \"1 шт\",\"вода\" : \"500мл\"},\"text\":\"Откройте упаковку, залейте кипятком\"}, {\"name\":\"android phone\",\"products\":{\"говно\" : \"5 кг\",\"палки\" : \"5 шт\"},\"text\":\"Возьмите 50 тысяч от своей запрлаты. Пойдите в мтс, купите на эти деньги говна и палок.\n            Перемешайте говно и палки. Получите мобильный телефон. Теперь у вас есть телефон на платформе андройд\"}]";
+
+
                             final List<Recipe> getRecipes = parseRecipe(body);
 
                             Fragment recipesListFragment = new RecipesListFragment();
