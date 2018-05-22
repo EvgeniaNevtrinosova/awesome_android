@@ -8,4 +8,6 @@
     <string name="empty_string"></string>
     <string name="recipe_what_you_need">Вот рецепты, которые вам подойдут:</string>
     <string name="error_message">Что-то пошло не так! Попробуйте еще раз.</string>
+    <string name="empty_error_message">Для поиска необходимо выбрать продукты.</string>
+    <string name="empty_recipes_list">К сожалению, для вас ничего не нашлось:(</string>
 </resources>

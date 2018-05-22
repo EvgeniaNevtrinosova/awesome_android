@@ -76,9 +76,12 @@ public class EnterFragment extends Fragment {
     private View.OnClickListener onSearchButtonClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
+            if (ingredientsArray.size() == 0) {
+                Toast.makeText(getActivity(), R.string.empty_error_message, Toast.LENGTH_SHORT).show();
+                return;
+            }
+
             JsonObject json = new JsonObject();
-
-
             json.addProperty("products", String.valueOf(ingredientsArray));
 
             Retrofit retrofit = new Retrofit.Builder()
@@ -94,6 +97,11 @@ public class EnterFragment extends Fragment {
                     if (response.isSuccessful()) {
                         try {
                             String body = response.body().string();
+                            if (body.equals("[]")) {
+                                Toast.makeText(getActivity(), R.string.empty_recipes_list, Toast.LENGTH_SHORT).show();
+                                return;
+                            }
+
                             final List<Recipe> getRecipes = parseRecipe(body);
                             ingredientsArray.clear();
 
