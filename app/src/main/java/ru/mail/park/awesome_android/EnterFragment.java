@@ -92,16 +92,14 @@ public class EnterFragment extends Fragment {
                 @Override
                 public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                     if (response.isSuccessful()) {
-
-
                         try {
                             String body = response.body().string();
                             final List<Recipe> getRecipes = parseRecipe(body);
-                            Log.d("parse ok ", "popa");
+                            ingredientsArray.clear();
 
                             Fragment recipesListFragment = new RecipesListFragment();
-                            Bundle bundle = new Bundle();
 
+                            Bundle bundle = new Bundle();
                             bundle.putInt("size", getRecipes.size());
                             for (int i = 0; i < getRecipes.size(); i++) {
                                 bundle.putSerializable("recipe " + i, getRecipes.get(i));
@@ -117,9 +115,6 @@ public class EnterFragment extends Fragment {
                         } catch (IOException e) {
 
                         }
-
-
-
                     }
                 }
 

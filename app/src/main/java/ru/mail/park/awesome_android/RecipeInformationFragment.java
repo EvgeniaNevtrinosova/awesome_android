@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -34,16 +35,18 @@ public class RecipeInformationFragment extends Fragment {
     private void writeRecipe() {
         recipeName.setText(recipe.getName());
 
-        Map<String, String> productsMap = new HashMap<String, String>();
-//        productsMap = recipe.getProducts();
-//        StringBuilder listOfProducts = new StringBuilder();
-//        String prefix = "";
-//        for (Map.Entry entry: productsMap.entrySet()) {
-//            listOfProducts.append(prefix);
-//            prefix = ",";
-//            listOfProducts.append(entry.getKey()).append('-').append(entry.getValue());
-//        }
-//        recipeProducts.setText(listOfProducts.toString());
+        TextView products = new TextView(getActivity());
+        ArrayList<String> productsList = new ArrayList<String>();
+        productsList = recipe.getProducts();
+        StringBuilder listOfProducts = new StringBuilder();
+
+        String prefix = "";
+        for (String str: productsList) {
+            listOfProducts.append(prefix);
+            prefix = ",";
+            listOfProducts.append(str);
+        }
+        recipeProducts.setText(listOfProducts.toString());
 
         recipeText.setText(recipe.getText());
     }

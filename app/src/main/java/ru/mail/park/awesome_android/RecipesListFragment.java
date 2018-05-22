@@ -68,7 +68,7 @@ public class RecipesListFragment extends Fragment {
             border.setColor(0xFFFFFFFF);
             border.setStroke(10, 0xFF000000);
             recipeTitle.setBackground(border);
-//            recipeTitle.setTop(1000);
+
             recipeTitle.setPadding(16, 16, 16, 16);
 
             TextView name = new TextView(getActivity());
@@ -80,23 +80,23 @@ public class RecipesListFragment extends Fragment {
 
             //список продуктов
 
-//            TextView products = new TextView(getActivity());
-//            Map<String, String> productsMap = new HashMap<String, String>();
-//            productsMap = recipe.getProducts();
-//            StringBuilder listOfProducts = new StringBuilder();
-//
-//            String prefix = "";
-//            for (Map.Entry entry: productsMap.entrySet()) {
-//                listOfProducts.append(prefix);
-//                prefix = ",";
-//                listOfProducts.append(entry.getKey()).append('-').append(entry.getValue());
-//            }
-//
-//            products.setText(listOfProducts.toString());
-//            products.setGravity(Gravity.LEFT);
-//            products.setTextSize(20);
-//            products.setWidth(1000);
-//            recipeTitle.addView(products);
+            TextView products = new TextView(getActivity());
+            ArrayList<String> productsList = new ArrayList<String>();
+            productsList = recipe.getProducts();
+            StringBuilder listOfProducts = new StringBuilder();
+
+            String prefix = "";
+            for (String str: productsList) {
+                listOfProducts.append(prefix);
+                prefix = ",";
+                listOfProducts.append(str);
+            }
+
+            products.setText(listOfProducts.toString());
+            products.setGravity(Gravity.LEFT);
+            products.setTextSize(20);
+            products.setWidth(1000);
+            recipeTitle.addView(products);
 
             setOnClick(recipeTitle, recipe);
 
