@@ -5,6 +5,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,15 +20,20 @@ import android.widget.TextView;
 import android.widget.Toast;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
+
+import org.json.JSONObject;
+
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
+import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -42,7 +48,7 @@ public class EnterFragment extends Fragment {
     private static final Gson GSON = new GsonBuilder()
             .create();
 
-    private String[] autoCompleteArray = {"Огурец", "Помидор", "Картошка", "Моркошка"};
+    private String[] autoCompleteArray = {"Огурец", "Томат", "Картошка", "Моркошка", "Говно", "Палки", "Хрен"};
 
     public static EnterFragment newInstance() {
         Bundle args = new Bundle();
@@ -71,32 +77,27 @@ public class EnterFragment extends Fragment {
         @Override
         public void onClick(View v) {
             JsonObject json = new JsonObject();
+
+
             json.addProperty("products", String.valueOf(ingredientsArray));
 
             Retrofit retrofit = new Retrofit.Builder()
-                    .baseUrl("https://food-node.herokuapp.com/")
+                    .baseUrl("http://195.133.1.169:8082/")
                     .addConverterFactory(GsonConverterFactory.create())
                     .build();
 
             Service service = retrofit.create(Service.class);
             final Call<ResponseBody> post = service.setIngredients(json);
-
-            Thread thread = new Thread(new Runnable() {
-                public void run() {
-                    try {
-                        Response<ResponseBody> response = post.execute();
-
-                        try(final ResponseBody responseBody = response.body()) {
-                            if (responseBody == null) {
-                                Toast errorMessage = Toast.makeText(getContext(), R.string.error_message, Toast.LENGTH_SHORT);
-                                errorMessage.show();
-                                throw new IOException("Cannot get body");
-                            }
-                           // final String body = responseBody.string();
-                            final String body = "[{\"name\":\"student pack\",\"products\":{\"дошик\" : \"1 шт\",\"вода\" : \"500мл\"},\"text\":\"Откройте упаковку, залейте кипятком\"}, {\"name\":\"android phone\",\"products\":{\"говно\" : \"5 кг\",\"палки\" : \"5 шт\"},\"text\":\"Возьмите 50 тысяч от своей запрлаты. Пойдите в мтс, купите на эти деньги говна и палок.\n            Перемешайте говно и палки. Получите мобильный телефон. Теперь у вас есть телефон на платформе андройд\"}]";
+            post.enqueue(new Callback<ResponseBody>() {
+                @Override
+                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                    if (response.isSuccessful()) {
 
 
+                        try {
+                            String body = response.body().string();
                             final List<Recipe> getRecipes = parseRecipe(body);
+                            Log.d("parse ok ", "popa");
 
                             Fragment recipesListFragment = new RecipesListFragment();
                             Bundle bundle = new Bundle();
@@ -112,14 +113,23 @@ public class EnterFragment extends Fragment {
                                     .replace(R.id.fragmentContainer, recipesListFragment)
                                     .addToBackStack(null)
                                     .commit();
+
+                        } catch (IOException e) {
+
                         }
-                    } catch (IOException e) {
-                        Toast errorMessage = Toast.makeText(getContext(), R.string.error_message, Toast.LENGTH_SHORT);
-                        errorMessage.show();
+
+
+
                     }
                 }
+
+                @Override
+                public void onFailure(Call<ResponseBody> call, Throwable t) {
+
+                }
             });
-            thread.start();
+
+
         }
     };
 
@@ -173,7 +183,6 @@ public class EnterFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         View v = inflater.inflate(R.layout.enter_fr, container, false);
-
 
         enterIngredient = v.findViewById(R.id.ingredient);
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_dropdown_item_1line, autoCompleteArray);

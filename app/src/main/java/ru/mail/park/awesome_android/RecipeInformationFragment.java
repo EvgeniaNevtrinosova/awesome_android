@@ -35,15 +35,15 @@ public class RecipeInformationFragment extends Fragment {
         recipeName.setText(recipe.getName());
 
         Map<String, String> productsMap = new HashMap<String, String>();
-        productsMap = recipe.getProducts();
-        StringBuilder listOfProducts = new StringBuilder();
-        String prefix = "";
-        for (Map.Entry entry: productsMap.entrySet()) {
-            listOfProducts.append(prefix);
-            prefix = ",";
-            listOfProducts.append(entry.getKey()).append('-').append(entry.getValue());
-        }
-        recipeProducts.setText(listOfProducts.toString());
+//        productsMap = recipe.getProducts();
+//        StringBuilder listOfProducts = new StringBuilder();
+//        String prefix = "";
+//        for (Map.Entry entry: productsMap.entrySet()) {
+//            listOfProducts.append(prefix);
+//            prefix = ",";
+//            listOfProducts.append(entry.getKey()).append('-').append(entry.getValue());
+//        }
+//        recipeProducts.setText(listOfProducts.toString());
 
         recipeText.setText(recipe.getText());
     }

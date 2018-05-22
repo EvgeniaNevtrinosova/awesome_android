@@ -53,6 +53,14 @@ public class RecipesListFragment extends Fragment {
     private void writeListOfRecipes(ArrayList<Recipe> recipes) {
         for (Recipe recipe: recipes) {
             LinearLayout recipeTitle = new LinearLayout(getActivity());
+
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.WRAP_CONTENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT
+            );
+            params.setMargins(20, 30, 20, 30);
+
+            recipeTitle.setLayoutParams(params);
             recipeTitle.setOrientation(LinearLayout.VERTICAL);
             recipeTitle.setClickable(true);
 
@@ -60,7 +68,8 @@ public class RecipesListFragment extends Fragment {
             border.setColor(0xFFFFFFFF);
             border.setStroke(10, 0xFF000000);
             recipeTitle.setBackground(border);
-            recipeTitle.setTop(100);
+//            recipeTitle.setTop(1000);
+            recipeTitle.setPadding(16, 16, 16, 16);
 
             TextView name = new TextView(getActivity());
             name.setText(recipe.getName());
@@ -69,23 +78,25 @@ public class RecipesListFragment extends Fragment {
             name.setWidth(800);
             recipeTitle.addView(name);
 
-            TextView products = new TextView(getActivity());
-            Map<String, String> productsMap = new HashMap<String, String>();
-            productsMap = recipe.getProducts();
-            StringBuilder listOfProducts = new StringBuilder();
+            //список продуктов
 
-            String prefix = "";
-            for (Map.Entry entry: productsMap.entrySet()) {
-                listOfProducts.append(prefix);
-                prefix = ",";
-                listOfProducts.append(entry.getKey()).append('-').append(entry.getValue());
-            }
-
-            products.setText(listOfProducts.toString());
-            products.setGravity(Gravity.LEFT);
-            products.setTextSize(20);
-            products.setWidth(1000);
-            recipeTitle.addView(products);
+//            TextView products = new TextView(getActivity());
+//            Map<String, String> productsMap = new HashMap<String, String>();
+//            productsMap = recipe.getProducts();
+//            StringBuilder listOfProducts = new StringBuilder();
+//
+//            String prefix = "";
+//            for (Map.Entry entry: productsMap.entrySet()) {
+//                listOfProducts.append(prefix);
+//                prefix = ",";
+//                listOfProducts.append(entry.getKey()).append('-').append(entry.getValue());
+//            }
+//
+//            products.setText(listOfProducts.toString());
+//            products.setGravity(Gravity.LEFT);
+//            products.setTextSize(20);
+//            products.setWidth(1000);
+//            recipeTitle.addView(products);
 
             setOnClick(recipeTitle, recipe);
 

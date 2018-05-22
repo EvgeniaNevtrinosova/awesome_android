@@ -4,20 +4,19 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
 
-public class Recipe implements Serializable{
+public class Recipe implements Serializable {
     @Expose()
-    @SerializedName("name")
+    @SerializedName("recipe_name")
     private String name = "";
 
     @Expose()
-    @SerializedName("products")
-    private Map<String, String> products = new HashMap<String, String>();
+    @SerializedName("recipe_products")
+    private ArrayList<String> products = new ArrayList();
 
     @Expose()
-    @SerializedName("text")
+    @SerializedName("recipe_text")
     private String text = "";
 
     public String getName() {
@@ -28,13 +27,15 @@ public class Recipe implements Serializable{
         this.name = name;
     }
 
-    public Map<String, String> getProducts() {
+
+    public ArrayList getProducts() {
         return products;
     }
 
-    public void setProducts(Map<String, String> products) {
+    public void setProducts(ArrayList<String> products) {
         this.products = products;
     }
+
 
     public String getText() {
         return text;
