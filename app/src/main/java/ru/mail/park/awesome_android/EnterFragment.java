@@ -106,7 +106,7 @@ public class EnterFragment extends Fragment {
                 Toast.makeText(getActivity(), R.string.empty_error_message, Toast.LENGTH_SHORT).show();
                 return;
             }
-            ((ViewGroup) v.getParent()).removeView(searchButton);
+            v.setVisibility(View.GONE);
             loadingPanel = getActivity().findViewById(R.id.loadingPanel);
             if (loadingPanel != null) {
                 loadingPanel.setVisibility(View.VISIBLE);
@@ -189,7 +189,7 @@ public class EnterFragment extends Fragment {
             layoutWithIngredientAndButton.setOrientation(LinearLayout.HORIZONTAL);
 
             LinearLayout layoutWithButton = new LinearLayout(getActivity());
-            layoutWithButton.setGravity(Gravity.RIGHT);
+            layoutWithButton.setGravity(Gravity.END;
 
             Button remove = new Button(getActivity());
             remove.setText(R.string.remove);
@@ -199,7 +199,7 @@ public class EnterFragment extends Fragment {
 
             TextView text = new TextView(getActivity());
             text.setText(ingredient);
-            text.setGravity(Gravity.LEFT);
+            text.setGravity(Gravity.START);
             text.setTextSize(20);
             text.setWidth(800);
             layoutWithIngredientAndButton.addView(text);
@@ -245,6 +245,7 @@ public class EnterFragment extends Fragment {
             @Override
             public void handleMessage(Message msg) {
                 loadingPanel.setVisibility(View.GONE);
+                searchButton.setVisibility(View.VISIBLE);
             }
         };
         return v;
