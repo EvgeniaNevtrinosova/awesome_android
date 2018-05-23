@@ -190,7 +190,6 @@ public class EnterFragment extends Fragment {
             }
             if (!Arrays.asList(getResources().getStringArray(R.array.autoCompleteArray)).contains(ingredient.toLowerCase())) {
                 Toast t = Toast.makeText(getActivity(), R.string.not_found_ingredients, Toast.LENGTH_SHORT);
-                t.getView().setBackgroundColor(getResources().getColor(R.color.lightGreen));
                 t.setGravity(Gravity.CENTER_VERTICAL, 0, 0);
                 t.show();
                 return;
