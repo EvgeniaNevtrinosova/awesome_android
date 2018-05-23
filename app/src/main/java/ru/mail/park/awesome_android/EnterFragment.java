@@ -4,6 +4,7 @@ import android.content.res.Resources;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -13,7 +14,6 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewManager;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
@@ -29,7 +29,7 @@ import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
 
 import java.io.IOException;
-import java.lang.reflect.Array;
+import java.lang.ref.WeakReference;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -48,9 +48,8 @@ public class EnterFragment extends Fragment {
     private RelativeLayout loadingPanel;
     private AutoCompleteTextView enterIngredient;
     private LinearLayout addedIngredients;
-    private ArrayList ingredientsArray = new ArrayList();
-    private String ingredient;
-    private static Handler handler;
+    private ArrayList<String> ingredientsArray = new ArrayList<>();
+    private Handler handler = new MyHandler(this);
     private static final Gson GSON = new GsonBuilder()
             .create();
 
@@ -61,19 +60,34 @@ public class EnterFragment extends Fragment {
         return fragment;
     }
 
+    static class MyHandler extends Handler {
+        WeakReference<EnterFragment> frag;
+
+        MyHandler(EnterFragment f) {
+            frag = new WeakReference<>(f);
+        }
+
+        @Override
+        public void handleMessage(Message msg) {
+            frag.get().loadingPanel.setVisibility(View.GONE);
+            frag.get().searchButton.setVisibility(View.VISIBLE);
+        }
+
+    }
+
     private View.OnClickListener onRemoveButtonClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            LinearLayout parent = (LinearLayout) ((LinearLayout) v.getParent()).getParent();
+            LinearLayout parent = (LinearLayout) v.getParent().getParent();
             LinearLayout childLayoutWithButton = (LinearLayout) v.getParent();
             TextView childText = (TextView) parent.getChildAt(0);
 
             String removeIngredient = childText.getText().toString();
             ingredientsArray.remove(removeIngredient);
 
-            ((ViewManager) parent).removeView(childText);
-            ((ViewManager) parent).removeView(childLayoutWithButton);
-            ((ViewManager) parent).removeView(parent);
+            parent.removeView(childText);
+            parent.removeView(childLayoutWithButton);
+            parent.removeView(parent);
         }
     };
 
@@ -123,12 +137,12 @@ public class EnterFragment extends Fragment {
             final Call<ResponseBody> post = service.setIngredients(json);
             post.enqueue(new Callback<ResponseBody>() {
                 @Override
-                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
                     if (response.isSuccessful()) {
                         try {
                             handler.sendEmptyMessage(0);
                             String body = response.body().string();
-                            if (body.equals("[]")) {
+                            if (body != null && body.equals("[]")) {
                                 Toast.makeText(getActivity(), R.string.empty_recipes_list, Toast.LENGTH_SHORT).show();
                                 return;
                             }
@@ -158,7 +172,7 @@ public class EnterFragment extends Fragment {
                 }
 
                 @Override
-                public void onFailure(Call<ResponseBody> call, Throwable t) {
+                public void onFailure(@NonNull Call<ResponseBody> call, @NonNull Throwable t) {
 
                 }
             });
@@ -170,7 +184,7 @@ public class EnterFragment extends Fragment {
     private View.OnClickListener onAddButtonClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-            ingredient = enterIngredient.getText().toString();
+            String ingredient = enterIngredient.getText().toString();
             if (ingredient.length() == 0) {
                 return;
             }
@@ -189,7 +203,7 @@ public class EnterFragment extends Fragment {
             layoutWithIngredientAndButton.setOrientation(LinearLayout.HORIZONTAL);
 
             LinearLayout layoutWithButton = new LinearLayout(getActivity());
-            layoutWithButton.setGravity(Gravity.END;
+            layoutWithButton.setGravity(Gravity.END);
 
             Button remove = new Button(getActivity());
             remove.setText(R.string.remove);
@@ -230,7 +244,7 @@ public class EnterFragment extends Fragment {
 
         Resources res = getResources();
         String[] autoCompleteArray = res.getStringArray(R.array.autoCompleteArray);
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_dropdown_item_1line, autoCompleteArray);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_dropdown_item_1line, autoCompleteArray);
         enterIngredient.setAdapter(adapter);
         enterIngredient.addTextChangedListener(onTextChangedListener);
 
@@ -241,13 +255,6 @@ public class EnterFragment extends Fragment {
 
         addButton.setOnClickListener(onAddButtonClickListener);
         searchButton.setOnClickListener(onSearchButtonClickListener);
-        handler = new Handler() {
-            @Override
-            public void handleMessage(Message msg) {
-                loadingPanel.setVisibility(View.GONE);
-                searchButton.setVisibility(View.VISIBLE);
-            }
-        };
         return v;
     }
 }
