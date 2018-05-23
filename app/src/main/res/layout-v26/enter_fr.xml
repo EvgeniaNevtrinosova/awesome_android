@@ -32,15 +32,6 @@
         android:backgroundTint="@android:color/holo_blue_light"
         android:text="@string/add_button" />
 
-    <LinearLayout
-        android:id="@+id/add_ingredient_layout"
-        android:layout_width="match_parent"
-        android:layout_height="331dp"
-        android:orientation="vertical"
-        android:paddingHorizontal="10dp"
-        android:paddingVertical="10dp"
-        android:scrollIndicators="none" />
-
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycler"
         android:layout_width="match_parent"
@@ -51,7 +42,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="bottom"
-        android:layout_gravity="center"
         android:text="@string/search" />
 
     <RelativeLayout

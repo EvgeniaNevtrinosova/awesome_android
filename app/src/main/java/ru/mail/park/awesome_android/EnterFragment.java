@@ -1,5 +1,6 @@
 package ru.mail.park.awesome_android;
 
+import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.os.Handler;
@@ -8,6 +9,8 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.Gravity;
@@ -48,6 +51,9 @@ public class EnterFragment extends Fragment {
     private RelativeLayout loadingPanel;
     private AutoCompleteTextView enterIngredient;
     private LinearLayout addedIngredients;
+    private ArrayList<String> ingredients;
+    RecyclerView recyclerView;
+    RecyclerAdapter adapter;
     private ArrayList<String> ingredientsArray = new ArrayList<>();
     private Handler handler = new MyHandler(this);
     private static final Gson GSON = new GsonBuilder()
@@ -194,31 +200,33 @@ public class EnterFragment extends Fragment {
                 t.show();
                 return;
             }
-            ingredientsArray.add(ingredient);
-
-            enterIngredient.setText(R.string.empty_string);
-
-            LinearLayout layoutWithIngredientAndButton = new LinearLayout(getActivity());
-            layoutWithIngredientAndButton.setOrientation(LinearLayout.HORIZONTAL);
-
-            LinearLayout layoutWithButton = new LinearLayout(getActivity());
-            layoutWithButton.setGravity(Gravity.END);
-
-            Button remove = new Button(getActivity());
-            remove.setText(R.string.remove);
-            remove.setWidth(200);
-            remove.setOnClickListener(onRemoveButtonClickListener);
-            layoutWithButton.addView(remove);
-
-            TextView text = new TextView(getActivity());
-            text.setText(ingredient);
-            text.setGravity(Gravity.START);
-            text.setTextSize(20);
-            text.setWidth(800);
-            layoutWithIngredientAndButton.addView(text);
-            layoutWithIngredientAndButton.addView(layoutWithButton);
-
-            addedIngredients.addView(layoutWithIngredientAndButton);
+//            ingredientsArray.add(ingredient);
+//
+//            enterIngredient.setText(R.string.empty_string);
+//
+//            LinearLayout layoutWithIngredientAndButton = new LinearLayout(getActivity());
+//            layoutWithIngredientAndButton.setOrientation(LinearLayout.HORIZONTAL);
+//
+//            LinearLayout layoutWithButton = new LinearLayout(getActivity());
+//            layoutWithButton.setGravity(Gravity.END);
+//
+//            Button remove = new Button(getActivity());
+//            remove.setText(R.string.remove);
+//            remove.setWidth(200);
+//            remove.setOnClickListener(onRemoveButtonClickListener);
+//            layoutWithButton.addView(remove);
+//
+//            TextView text = new TextView(getActivity());
+//            text.setText(ingredient);
+//            text.setGravity(Gravity.START);
+//            text.setTextSize(20);
+//            text.setWidth(800);
+//            layoutWithIngredientAndButton.addView(text);
+//            layoutWithIngredientAndButton.addView(layoutWithButton);
+//
+//            addedIngredients.addView(layoutWithIngredientAndButton);
+            ingredients.add(ingredient);
+            adapter.notifyItemChanged(0);
         }
     };
 
@@ -238,6 +246,17 @@ public class EnterFragment extends Fragment {
             container, @Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         View v = inflater.inflate(R.layout.enter_fr, container, false);
+        ingredients = new ArrayList<String>();
+        adapter = new RecyclerAdapter(ingredients);
+        recyclerView = v.findViewById(R.id.recycler);
+        recyclerView.setAdapter(adapter);
+
+        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            recyclerView.setLayoutManager(new GridLayoutManager(container.getContext(), 2));
+        } else {
+            recyclerView.setLayoutManager(new GridLayoutManager(container.getContext(), 1));
+        }
+        adapter.notifyDataSetChanged();
 
         enterIngredient = v.findViewById(R.id.ingredient);
 

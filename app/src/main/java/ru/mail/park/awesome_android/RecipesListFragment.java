@@ -20,7 +20,6 @@ import java.util.ArrayList;
 public class RecipesListFragment extends Fragment {
     private LinearLayout recipeLayout;
     private ArrayList<Recipe> recipes = new ArrayList<>();
-    private Button mainMenuButton;
 
     private void setOnClick(final LinearLayout layout, final Recipe recipe){
         layout.setOnClickListener(new View.OnClickListener() {
@@ -80,25 +79,25 @@ public class RecipesListFragment extends Fragment {
 
             TextView name = new TextView(getActivity());
             name.setText(recipe.getName());
-            name.setGravity(Gravity.LEFT);
+            name.setGravity(Gravity.START);
             name.setTextSize(20);
             name.setWidth(800);
             recipeTitle.addView(name);
 
             TextView products = new TextView(getActivity());
-            ArrayList<String> productsList = new ArrayList<String>();
+            ArrayList productsList;
             productsList = recipe.getProducts();
             StringBuilder listOfProducts = new StringBuilder();
 
             String prefix = "";
-            for (String str: productsList) {
+            for (Object str: productsList) {
                 listOfProducts.append(prefix);
                 prefix = ",";
                 listOfProducts.append(str);
             }
 
             products.setText(listOfProducts.toString());
-            products.setGravity(Gravity.LEFT);
+            products.setGravity(Gravity.START);
             products.setTextSize(20);
             products.setWidth(1000);
             recipeTitle.addView(products);
@@ -134,7 +133,7 @@ public class RecipesListFragment extends Fragment {
         View v = inflater.inflate(R.layout.get_list_fr, container, false);
 
         recipeLayout = v.findViewById(R.id.list_of_recipes);
-        mainMenuButton = v.findViewById(R.id.main_menu_button_from_recipe_list);
+        Button mainMenuButton = v.findViewById(R.id.main_menu_button_from_recipe_list);
         mainMenuButton.setOnClickListener(onMainMenuButtonClickListener);
 
         if (recipes.isEmpty()) {
