@@ -137,36 +137,41 @@ public class EnterFragment extends Fragment {
             final Call<ResponseBody> post = service.setIngredients(json);
             post.enqueue(new Callback<ResponseBody>() {
                 @Override
+
                 public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
                     if (response.isSuccessful()) {
                         try {
                             handler.sendEmptyMessage(0);
-                            String body = response.body().string();
-                            if (body != null && body.equals("[]")) {
-                                Toast.makeText(getActivity(), R.string.empty_recipes_list, Toast.LENGTH_SHORT).show();
-                                return;
+
+                            ResponseBody responseBody = response.body();
+                            if (responseBody != null) {
+                               String body = responseBody.string();
+
+                                if (body != null && body.equals("[]")) {
+                                    Toast.makeText(getActivity(), R.string.empty_recipes_list, Toast.LENGTH_SHORT).show();
+                                    return;
+                                }
+
+                                final List<Recipe> getRecipes = parseRecipe(body);
+                                ingredientsArray.clear();
+
+                                Fragment recipesListFragment = new RecipesListFragment();
+
+                                Bundle bundle = new Bundle();
+                                bundle.putInt("size", getRecipes.size());
+                                for (int i = 0; i < getRecipes.size(); i++) {
+                                    bundle.putSerializable("recipe " + i, getRecipes.get(i));
+                                }
+
+                                recipesListFragment.setArguments(bundle);
+                                FragmentManager fragmentManager = getFragmentManager();
+                                fragmentManager.beginTransaction()
+                                        .replace(R.id.fragmentContainer, recipesListFragment, "RecipeList Tag")
+                                        .addToBackStack(null)
+                                        .commit();
                             }
-
-                            final List<Recipe> getRecipes = parseRecipe(body);
-                            ingredientsArray.clear();
-
-                            Fragment recipesListFragment = new RecipesListFragment();
-
-                            Bundle bundle = new Bundle();
-                            bundle.putInt("size", getRecipes.size());
-                            for (int i = 0; i < getRecipes.size(); i++) {
-                                bundle.putSerializable("recipe " + i, getRecipes.get(i));
-                            }
-
-                            recipesListFragment.setArguments(bundle);
-                            FragmentManager fragmentManager = getFragmentManager();
-                            fragmentManager.beginTransaction()
-                                    .replace(R.id.fragmentContainer, recipesListFragment, "RecipeList Tag")
-                                    .addToBackStack(null)
-                                    .commit();
-
                         } catch (IOException e) {
-
+                            Toast.makeText(getActivity(), R.string.error_message, Toast.LENGTH_SHORT).show();
                         }
                     }
                 }
@@ -227,7 +232,7 @@ public class EnterFragment extends Fragment {
         try {
             Type listType = new TypeToken<List<Recipe>>() {
             }.getType();
-            return (List<Recipe>) GSON.fromJson(body, listType);
+            return GSON.fromJson(body, listType);
         } catch (JsonSyntaxException e) {
             throw new IOException(e);
         }

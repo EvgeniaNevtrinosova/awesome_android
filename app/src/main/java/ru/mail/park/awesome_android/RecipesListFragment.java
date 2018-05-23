@@ -14,13 +14,13 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+import java.io.Serializable;
 import java.util.ArrayList;
 
 
 public class RecipesListFragment extends Fragment {
     private LinearLayout recipeLayout;
     private ArrayList<Recipe> recipes = new ArrayList<>();
-    private Button mainMenuButton;
 
     private void setOnClick(final LinearLayout layout, final Recipe recipe){
         layout.setOnClickListener(new View.OnClickListener() {
@@ -33,8 +33,6 @@ public class RecipesListFragment extends Fragment {
 
                 FragmentManager fragmentManager = getFragmentManager();
                 FragmentTransaction transaction = fragmentManager.beginTransaction();
-
-                //transaction.remove(fragmentManager.findFragmentById(R.id.fragmentContainer));
 
                 transaction
                         .replace(R.id.fragmentContainer, recipeInformationFragment)
@@ -80,14 +78,13 @@ public class RecipesListFragment extends Fragment {
 
             TextView name = new TextView(getActivity());
             name.setText(recipe.getName());
-            name.setGravity(Gravity.LEFT);
+            name.setGravity(Gravity.START);
             name.setTextSize(20);
             name.setWidth(800);
             recipeTitle.addView(name);
 
             TextView products = new TextView(getActivity());
-            ArrayList<String> productsList = new ArrayList<String>();
-            productsList = recipe.getProducts();
+            ArrayList<String> productsList = recipe.getProducts();
             StringBuilder listOfProducts = new StringBuilder();
 
             String prefix = "";
@@ -98,7 +95,7 @@ public class RecipesListFragment extends Fragment {
             }
 
             products.setText(listOfProducts.toString());
-            products.setGravity(Gravity.LEFT);
+            products.setGravity(Gravity.START);
             products.setTextSize(20);
             products.setWidth(1000);
             recipeTitle.addView(products);
@@ -110,7 +107,7 @@ public class RecipesListFragment extends Fragment {
     }
 
     private void formingRecipesList() {
-        ArrayList recipesFromServer = new ArrayList();
+        ArrayList<Serializable> recipesFromServer = new ArrayList<>();
         Bundle bundle = getArguments();
         for (int i = 0; i < bundle.getInt("size"); i++) {
             try {
@@ -134,7 +131,7 @@ public class RecipesListFragment extends Fragment {
         View v = inflater.inflate(R.layout.get_list_fr, container, false);
 
         recipeLayout = v.findViewById(R.id.list_of_recipes);
-        mainMenuButton = v.findViewById(R.id.main_menu_button_from_recipe_list);
+        Button mainMenuButton = v.findViewById(R.id.main_menu_button_from_recipe_list);
         mainMenuButton.setOnClickListener(onMainMenuButtonClickListener);
 
         if (recipes.isEmpty()) {
