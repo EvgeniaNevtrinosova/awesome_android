@@ -20,9 +20,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -50,11 +48,9 @@ public class EnterFragment extends Fragment {
     private Button searchButton;
     private RelativeLayout loadingPanel;
     private AutoCompleteTextView enterIngredient;
-    private LinearLayout addedIngredients;
     private ArrayList<String> ingredients;
     RecyclerView recyclerView;
     RecyclerAdapter adapter;
-    private ArrayList<String> ingredientsArray = new ArrayList<>();
     private Handler handler = new MyHandler(this);
     private static final Gson GSON = new GsonBuilder()
             .create();
@@ -81,22 +77,6 @@ public class EnterFragment extends Fragment {
 
     }
 
-    private View.OnClickListener onRemoveButtonClickListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            LinearLayout parent = (LinearLayout) v.getParent().getParent();
-            LinearLayout childLayoutWithButton = (LinearLayout) v.getParent();
-            TextView childText = (TextView) parent.getChildAt(0);
-
-            String removeIngredient = childText.getText().toString();
-            ingredientsArray.remove(removeIngredient);
-
-            parent.removeView(childText);
-            parent.removeView(childLayoutWithButton);
-            parent.removeView(parent);
-        }
-    };
-
     private TextWatcher onTextChangedListener = new TextWatcher() {
         @Override
         public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -121,8 +101,7 @@ public class EnterFragment extends Fragment {
     private View.OnClickListener onSearchButtonClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-
-            if (ingredientsArray.size() == 0) {
+            if (ingredients.size() == 0) {
                 Toast.makeText(getActivity(), R.string.empty_error_message, Toast.LENGTH_SHORT).show();
                 return;
             }
@@ -132,7 +111,7 @@ public class EnterFragment extends Fragment {
                 loadingPanel.setVisibility(View.VISIBLE);
             }
             JsonObject json = new JsonObject();
-            json.addProperty("products", String.valueOf(ingredientsArray));
+            json.addProperty("products", String.valueOf(ingredients));
 
             Retrofit retrofit = new Retrofit.Builder()
                     .baseUrl("http://195.133.1.169:8082/")
@@ -154,7 +133,7 @@ public class EnterFragment extends Fragment {
                             }
 
                             final List<Recipe> getRecipes = parseRecipe(body);
-                            ingredientsArray.clear();
+                            ingredients.clear();
 
                             Fragment recipesListFragment = new RecipesListFragment();
 
@@ -198,6 +177,11 @@ public class EnterFragment extends Fragment {
                 Toast t = Toast.makeText(getActivity(), R.string.not_found_ingredients, Toast.LENGTH_SHORT);
                 t.setGravity(Gravity.CENTER_VERTICAL, 0, 0);
                 t.show();
+                return;
+            }
+
+            if (ingredients.contains(ingredient.toLowerCase())) {
+                adapter.notifyItemChanged(ingredients.indexOf(ingredient.toLowerCase()));
                 return;
             }
 //            ingredientsArray.add(ingredient);
@@ -246,7 +230,7 @@ public class EnterFragment extends Fragment {
             container, @Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         View v = inflater.inflate(R.layout.enter_fr, container, false);
-        ingredients = new ArrayList<String>();
+        ingredients = new ArrayList<>();
         adapter = new RecyclerAdapter(ingredients);
         recyclerView = v.findViewById(R.id.recycler);
         recyclerView.setAdapter(adapter);
@@ -268,8 +252,6 @@ public class EnterFragment extends Fragment {
 
         addButton = v.findViewById(R.id.add_button);
         searchButton = v.findViewById(R.id.search_recipe);
-
-        addedIngredients = v.findViewById(R.id.add_ingredient_layout);
 
         addButton.setOnClickListener(onAddButtonClickListener);
         searchButton.setOnClickListener(onSearchButtonClickListener);
