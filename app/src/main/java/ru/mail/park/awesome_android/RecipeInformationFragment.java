@@ -3,21 +3,22 @@ package ru.mail.park.awesome_android;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 public class RecipeInformationFragment extends Fragment {
     private Recipe recipe = new Recipe();
     private TextView recipeName;
     private TextView recipeProducts;
     private TextView recipeText;
+    private Button recipeListButton;
+    private Button mainMenuButton;
 
     private void getRecipe() {
         Object clickRecipe = new Object();
@@ -51,6 +52,37 @@ public class RecipeInformationFragment extends Fragment {
         recipeText.setText(recipe.getText());
     }
 
+    private View.OnClickListener onMainClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            FragmentManager fragmentManager = getFragmentManager();
+            EnterFragment enterFragment = new EnterFragment();
+
+            fragmentManager.beginTransaction()
+                    .replace(R.id.fragmentContainer, enterFragment)
+                    .addToBackStack(null)
+                    .commit();
+        }
+    };
+
+    private View.OnClickListener onRecipeListClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            FragmentManager fragmentManager = getFragmentManager();
+            int recipeListFragmentIndex = fragmentManager.getBackStackEntryCount() - 1;
+
+            FragmentManager.BackStackEntry backStackEntry = fragmentManager.getBackStackEntryAt(recipeListFragmentIndex);
+
+            Fragment listFragment1 = fragmentManager.findFragmentByTag("RecipeList Tag");
+
+            fragmentManager.beginTransaction()
+                    .replace(R.id.fragmentContainer, listFragment1)
+                    .addToBackStack(null)
+                    .commit();
+        }
+    };
+
+
 
     @Nullable
     @Override
@@ -61,6 +93,11 @@ public class RecipeInformationFragment extends Fragment {
         recipeName = v.findViewById(R.id.recipe_name);
         recipeProducts = v.findViewById(R.id.recipe_products);
         recipeText = v.findViewById(R.id.recipe_text);
+        recipeListButton = v.findViewById(R.id.recipe_button);
+        mainMenuButton = v.findViewById(R.id.main_button);
+
+        recipeListButton.setOnClickListener(onRecipeListClickListener);
+        mainMenuButton.setOnClickListener(onMainClickListener);
 
         getRecipe();
         writeRecipe();

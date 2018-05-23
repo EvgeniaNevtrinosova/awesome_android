@@ -1,5 +1,7 @@
 package ru.mail.park.awesome_android;
 
+import android.content.res.Resources;
+import android.content.res.TypedArray;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -47,8 +49,6 @@ public class EnterFragment extends Fragment {
     private String ingredient;
     private static final Gson GSON = new GsonBuilder()
             .create();
-
-    private String[] autoCompleteArray = {"Огурец", "Томат", "Картошка", "Моркошка", "Говно", "Палки", "Хрен"};
 
     public static EnterFragment newInstance() {
         Bundle args = new Bundle();
@@ -116,7 +116,7 @@ public class EnterFragment extends Fragment {
                             recipesListFragment.setArguments(bundle);
                             FragmentManager fragmentManager = getFragmentManager();
                             fragmentManager.beginTransaction()
-                                    .replace(R.id.fragmentContainer, recipesListFragment)
+                                    .replace(R.id.fragmentContainer, recipesListFragment, "RecipeList Tag")
                                     .addToBackStack(null)
                                     .commit();
 
@@ -139,7 +139,6 @@ public class EnterFragment extends Fragment {
     private View.OnClickListener onAddButtonClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View view) {
-
             ingredient = enterIngredient.getText().toString();
             ingredientsArray.add(ingredient);
 
@@ -188,6 +187,9 @@ public class EnterFragment extends Fragment {
         View v = inflater.inflate(R.layout.enter_fr, container, false);
 
         enterIngredient = v.findViewById(R.id.ingredient);
+
+        Resources res = getResources();
+        String[] autoCompleteArray = res.getStringArray(R.array.autoCompleteArray);
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_dropdown_item_1line, autoCompleteArray);
         enterIngredient.setAdapter(adapter);
 

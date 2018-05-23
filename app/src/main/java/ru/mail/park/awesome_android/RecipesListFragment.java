@@ -1,27 +1,19 @@
 package ru.mail.park.awesome_android;
 
 import android.graphics.drawable.GradientDrawable;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 
 public class RecipesListFragment extends Fragment {
@@ -44,7 +36,7 @@ public class RecipesListFragment extends Fragment {
 
                 transaction
                         .replace(R.id.fragmentContainer, recipeInformationFragment)
-                        .addToBackStack(null)
+                        .addToBackStack("Tag name")
                         .commit();
             }
         });
@@ -77,8 +69,6 @@ public class RecipesListFragment extends Fragment {
             name.setTextSize(20);
             name.setWidth(800);
             recipeTitle.addView(name);
-
-            //список продуктов
 
             TextView products = new TextView(getActivity());
             ArrayList<String> productsList = new ArrayList<String>();
@@ -129,7 +119,6 @@ public class RecipesListFragment extends Fragment {
         View v = inflater.inflate(R.layout.get_list_fr, container, false);
 
         recipeLayout = v.findViewById(R.id.list_of_recipes);
-
 
         if (recipes.isEmpty()) {
             formingRecipesList();

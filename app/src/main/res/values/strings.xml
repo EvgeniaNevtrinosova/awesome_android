@@ -10,4 +10,6 @@
     <string name="error_message">Что-то пошло не так! Попробуйте еще раз.</string>
     <string name="empty_error_message">Для поиска необходимо выбрать продукты.</string>
     <string name="empty_recipes_list">К сожалению, для вас ничего не нашлось:(</string>
+    <string name="to_recipe_list">К списку рецептов</string>
+    <string name="to_main_menu">В главное меню</string>
 </resources>
