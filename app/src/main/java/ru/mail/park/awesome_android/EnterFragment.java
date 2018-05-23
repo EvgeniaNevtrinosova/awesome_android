@@ -7,6 +7,8 @@ import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,15 +21,18 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
+
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
+
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -38,10 +43,12 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class EnterFragment extends Fragment {
     private Button addButton;
     private Button searchButton;
+    private RelativeLayout loadingPanel;
     private AutoCompleteTextView enterIngredient;
     private LinearLayout addedIngredients;
     private ArrayList ingredientsArray = new ArrayList();
     private String ingredient;
+    private static Handler handler;
     private static final Gson GSON = new GsonBuilder()
             .create();
 
@@ -68,6 +75,27 @@ public class EnterFragment extends Fragment {
         }
     };
 
+    private TextWatcher onTextChangedListener = new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+            if (s.toString().contains("\n")) {
+                s = s.toString().replace("\n", "");
+                enterIngredient.setText(s);
+                addButton.performClick();
+            }
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+
+        }
+    };
+
+
     private View.OnClickListener onSearchButtonClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
@@ -76,11 +104,8 @@ public class EnterFragment extends Fragment {
                 Toast.makeText(getActivity(), R.string.empty_error_message, Toast.LENGTH_SHORT).show();
                 return;
             }
-
-
-            Button b = v.findViewById(R.id.search_recipe);
-            ((ViewGroup) b.getParent()).removeView(b);
-            final RelativeLayout loadingPanel = getActivity().findViewById(R.id.loadingPanel);
+            ((ViewGroup) v.getParent()).removeView(searchButton);
+            loadingPanel = getActivity().findViewById(R.id.loadingPanel);
             if (loadingPanel != null) {
                 loadingPanel.setVisibility(View.VISIBLE);
             }
@@ -99,6 +124,7 @@ public class EnterFragment extends Fragment {
                 public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                     if (response.isSuccessful()) {
                         try {
+                            handler.sendEmptyMessage(0);
                             String body = response.body().string();
                             if (body.equals("[]")) {
                                 Toast.makeText(getActivity(), R.string.empty_recipes_list, Toast.LENGTH_SHORT).show();
@@ -186,7 +212,8 @@ public class EnterFragment extends Fragment {
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup
+            container, @Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         View v = inflater.inflate(R.layout.enter_fr, container, false);
 
@@ -196,6 +223,7 @@ public class EnterFragment extends Fragment {
         String[] autoCompleteArray = res.getStringArray(R.array.autoCompleteArray);
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_dropdown_item_1line, autoCompleteArray);
         enterIngredient.setAdapter(adapter);
+        enterIngredient.addTextChangedListener(onTextChangedListener);
 
         addButton = v.findViewById(R.id.add_button);
         searchButton = v.findViewById(R.id.search_recipe);
@@ -204,6 +232,12 @@ public class EnterFragment extends Fragment {
 
         addButton.setOnClickListener(onAddButtonClickListener);
         searchButton.setOnClickListener(onSearchButtonClickListener);
+        handler = new Handler() {
+            @Override
+            public void handleMessage(Message msg) {
+                loadingPanel.setVisibility(View.GONE);
+            }
+        };
         return v;
     }
 }
