@@ -10,6 +10,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -19,6 +20,7 @@ import java.util.ArrayList;
 public class RecipesListFragment extends Fragment {
     private LinearLayout recipeLayout;
     private ArrayList<Recipe> recipes = new ArrayList<>();
+    private Button mainMenuButton;
 
     private void setOnClick(final LinearLayout layout, final Recipe recipe){
         layout.setOnClickListener(new View.OnClickListener() {
@@ -41,6 +43,19 @@ public class RecipesListFragment extends Fragment {
             }
         });
     }
+
+    private View.OnClickListener onMainMenuButtonClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            FragmentManager fragmentManager = getFragmentManager();
+            EnterFragment enterFragment = new EnterFragment();
+
+            fragmentManager.beginTransaction()
+                    .replace(R.id.fragmentContainer, enterFragment)
+                    .addToBackStack(null)
+                    .commit();
+        }
+    };
 
     private void writeListOfRecipes(ArrayList<Recipe> recipes) {
         for (Recipe recipe: recipes) {
@@ -119,6 +134,8 @@ public class RecipesListFragment extends Fragment {
         View v = inflater.inflate(R.layout.get_list_fr, container, false);
 
         recipeLayout = v.findViewById(R.id.list_of_recipes);
+        mainMenuButton = v.findViewById(R.id.main_menu_button_from_recipe_list);
+        mainMenuButton.setOnClickListener(onMainMenuButtonClickListener);
 
         if (recipes.isEmpty()) {
             formingRecipesList();
