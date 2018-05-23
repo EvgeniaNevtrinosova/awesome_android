@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string-array name="autoCompleteArray">
-        <item>Огурец</item>
-        <item>Томат</item>
-        <item>Картошка</item>
-        <item>Моркошка</item>
-        <item>Говно</item>
-        <item>Палки</item>
-        <item>Хрен</item>
+        <item>огурец</item>
+        <item>томат</item>
+        <item>картошка</item>
+        <item>моркошка</item>
+        <item>говно</item>
+        <item>палки</item>
+        <item>хрен</item>
     </string-array>
 
 </resources>

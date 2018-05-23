@@ -29,8 +29,10 @@ import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
 
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import okhttp3.ResponseBody;
@@ -169,11 +171,18 @@ public class EnterFragment extends Fragment {
         @Override
         public void onClick(View view) {
             ingredient = enterIngredient.getText().toString();
-            ingredientsArray.add(ingredient);
-
             if (ingredient.length() == 0) {
                 return;
             }
+            if (!Arrays.asList(getResources().getStringArray(R.array.autoCompleteArray)).contains(ingredient.toLowerCase())) {
+                Toast t = Toast.makeText(getActivity(), R.string.not_found_ingredients, Toast.LENGTH_SHORT);
+                t.getView().setBackgroundColor(getResources().getColor(R.color.lightGreen));
+                t.setGravity(Gravity.CENTER_VERTICAL, 0, 0);
+                t.show();
+                return;
+            }
+            ingredientsArray.add(ingredient);
+
             enterIngredient.setText(R.string.empty_string);
 
             LinearLayout layoutWithIngredientAndButton = new LinearLayout(getActivity());
