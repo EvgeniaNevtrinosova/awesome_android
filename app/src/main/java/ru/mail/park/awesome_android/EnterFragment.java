@@ -1,6 +1,9 @@
 package ru.mail.park.awesome_android;
 
+import android.app.ProgressDialog;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -10,22 +13,28 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewManager;
+import android.view.ViewParent;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
+
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
+
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Response;
@@ -40,6 +49,7 @@ public class EnterFragment extends Fragment {
     private LinearLayout addedIngredients;
     private ArrayList ingredientsArray = new ArrayList();
     private String ingredient;
+    private static Handler h;
     private static final Gson GSON = new GsonBuilder()
             .create();
 
@@ -71,6 +81,12 @@ public class EnterFragment extends Fragment {
     private View.OnClickListener onSearchButtonClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
+            Button b = v.findViewById(R.id.search_recipe);
+            ((ViewGroup) b.getParent()).removeView(b);
+            final RelativeLayout loadingPanel = getActivity().findViewById(R.id.loadingPanel);
+            if (loadingPanel != null) {
+                loadingPanel.setVisibility(View.VISIBLE);
+            }
             JsonObject json = new JsonObject();
             json.addProperty("products", String.valueOf(ingredientsArray));
 
@@ -78,7 +94,6 @@ public class EnterFragment extends Fragment {
                     .baseUrl("https://food-node.herokuapp.com/")
                     .addConverterFactory(GsonConverterFactory.create())
                     .build();
-
             Service service = retrofit.create(Service.class);
             final Call<ResponseBody> post = service.setIngredients(json);
 
@@ -87,7 +102,8 @@ public class EnterFragment extends Fragment {
                     try {
                         Response<ResponseBody> response = post.execute();
 
-                        try(final ResponseBody responseBody = response.body()) {
+                        try (final ResponseBody responseBody = response.body()) {
+                            myHandler.sendEmptyMessage(0);
                             if (responseBody == null) {
                                 Toast errorMessage = Toast.makeText(getContext(), R.string.error_message, Toast.LENGTH_SHORT);
                                 errorMessage.show();
@@ -116,7 +132,15 @@ public class EnterFragment extends Fragment {
                         errorMessage.show();
                     }
                 }
-            });
+
+                Handler myHandler = new Handler() {
+                    @Override
+                    public void handleMessage(Message msg) {
+                        loadingPanel.setVisibility(View.GONE);
+                    }
+                };
+            }
+            );
             thread.start();
         }
     };
@@ -159,8 +183,9 @@ public class EnterFragment extends Fragment {
 
     public List<Recipe> parseRecipe(final String body) throws IOException {
         try {
-            Type listType = new TypeToken<List<Recipe>>(){}.getType();
-            return (List<Recipe>)GSON.fromJson(body, listType);
+            Type listType = new TypeToken<List<Recipe>>() {
+            }.getType();
+            return (List<Recipe>) GSON.fromJson(body, listType);
         } catch (JsonSyntaxException e) {
             throw new IOException(e);
         }
@@ -184,7 +209,9 @@ public class EnterFragment extends Fragment {
 
         addButton.setOnClickListener(onAddButtonClickListener);
         searchButton.setOnClickListener(onSearchButtonClickListener);
+        h = new Handler() {
 
+        };
         return v;
     }
 }

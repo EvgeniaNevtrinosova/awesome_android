@@ -1,32 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-xmlns:android="http://schemas.android.com/apk/res/android"
-android:layout_width="match_parent"
-android:layout_height="match_parent"
-android:orientation="vertical">
-
-<TextView
-    android:id="@+id/enter_ingredient"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_marginLeft="8dp"
-    android:layout_marginRight="8dp"
-    android:textSize="25sp"
-    android:hint="@string/enter_ingredient"/>
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
-<AutoCompleteTextView
-    android:id="@+id/ingredient"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_marginLeft="8dp"
-    android:layout_marginRight="8dp"
-    android:hint="@string/add"/>
+    <TextView
+        android:id="@+id/enter_ingredient"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:hint="@string/enter_ingredient"
+        android:textSize="25sp" />
 
-<Button
-    android:id="@+id/add_button"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:text="@string/add_button" />
+    <AutoCompleteTextView
+        android:id="@+id/ingredient"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:hint="@string/add" />
+
+    <Button
+        android:id="@+id/add_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/add_button" />
 
     <LinearLayout
         android:id="@+id/add_ingredient_layout"
@@ -35,10 +34,23 @@ android:orientation="vertical">
         android:orientation="vertical"
         android:scrollIndicators="none"></LinearLayout>
 
-<Button
-    android:id="@+id/search_recipe"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:text="@string/search" />
+    <Button
+        android:id="@+id/search_recipe"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/search" />
 
+    <RelativeLayout
+        android:id="@+id/loadingPanel"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="invisible"
+        android:gravity="center">
+
+        <ProgressBar
+            android:id="@+id/progress_bar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:indeterminate="true" />
+    </RelativeLayout>
 </LinearLayout>
