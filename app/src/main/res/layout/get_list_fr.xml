@@ -27,6 +27,7 @@
         android:id="@+id/main_menu_button_from_recipe_list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="В главное меню" />
+        android:text="@string/to_main_menu"
+        style="?android:attr/buttonBarButtonStyle"/>
 
 </LinearLayout>

@@ -30,22 +30,24 @@
         android:layout_marginHorizontal="10dp"
         android:background="@color/colorAccent"
         android:backgroundTint="@android:color/holo_blue_light"
-        android:text="@string/add_button" />
+        android:text="@string/add_button"
+        style="?android:attr/buttonBarButtonStyle"/>
 
     <LinearLayout
         android:id="@+id/add_ingredient_layout"
         android:layout_width="match_parent"
         android:layout_height="331dp"
         android:orientation="vertical"
-        android:paddingHorizontal="10dp"
-        android:paddingVertical="10dp"
-        android:scrollIndicators="none"></LinearLayout>
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:scrollIndicators="none" />
 
     <Button
         android:id="@+id/search_recipe"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/search" />
+        android:text="@string/search"
+        style="?android:attr/buttonBarButtonStyle"/>
 
     <RelativeLayout
         android:id="@+id/loadingPanel"
@@ -54,10 +56,10 @@
         android:gravity="center"
         android:visibility="invisible">
 
-        <ProgressBar
-            android:id="@+id/progress_bar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:indeterminate="true" />
-    </RelativeLayout>
+    <ProgressBar
+        android:id="@+id/progress_bar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:indeterminate="true" />
+    </RelativeLayout>gi
 </LinearLayout>

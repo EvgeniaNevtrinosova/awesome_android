@@ -5,7 +5,7 @@
     <string name="add_button">+</string>
     <string name="search">Найти рецепт</string>
     <string name="remove">-</string>
-    <string name="empty_string"></string>
+    <string name="empty_string"> </string>
     <string name="recipe_what_you_need">Вот рецепты, которые вам подойдут:</string>
     <string name="error_message">Что-то пошло не так! Попробуйте еще раз.</string>
     <string name="empty_error_message">Для поиска необходимо выбрать продукты.</string>
