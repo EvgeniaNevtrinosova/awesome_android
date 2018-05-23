@@ -2,6 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/lightGreen"
+    android:backgroundTint="@color/lightGreen"
     android:orientation="vertical">
 
     <TextView
@@ -25,6 +27,9 @@
         android:id="@+id/add_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginHorizontal="10dp"
+        android:background="@color/colorAccent"
+        android:backgroundTint="@android:color/holo_blue_light"
         android:text="@string/add_button" />
 
     <LinearLayout
@@ -32,6 +37,8 @@
         android:layout_width="match_parent"
         android:layout_height="331dp"
         android:orientation="vertical"
+        android:paddingHorizontal="10dp"
+        android:paddingVertical="10dp"
         android:scrollIndicators="none"></LinearLayout>
 
     <Button
@@ -44,8 +51,8 @@
         android:id="@+id/loadingPanel"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="invisible"
-        android:gravity="center">
+        android:gravity="center"
+        android:visibility="invisible">
 
         <ProgressBar
             android:id="@+id/progress_bar"
