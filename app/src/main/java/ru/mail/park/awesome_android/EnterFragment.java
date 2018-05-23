@@ -1,5 +1,6 @@
 package ru.mail.park.awesome_android;
 
+import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.os.Handler;
@@ -8,6 +9,8 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.Gravity;
@@ -17,9 +20,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -47,8 +48,9 @@ public class EnterFragment extends Fragment {
     private Button searchButton;
     private RelativeLayout loadingPanel;
     private AutoCompleteTextView enterIngredient;
-    private LinearLayout addedIngredients;
-    private ArrayList<String> ingredientsArray = new ArrayList<>();
+    private ArrayList<String> ingredients;
+    RecyclerView recyclerView;
+    RecyclerAdapter adapter;
     private Handler handler = new MyHandler(this);
     private static final Gson GSON = new GsonBuilder()
             .create();
@@ -75,22 +77,6 @@ public class EnterFragment extends Fragment {
 
     }
 
-    private View.OnClickListener onRemoveButtonClickListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            LinearLayout parent = (LinearLayout) v.getParent().getParent();
-            LinearLayout childLayoutWithButton = (LinearLayout) v.getParent();
-            TextView childText = (TextView) parent.getChildAt(0);
-
-            String removeIngredient = childText.getText().toString();
-            ingredientsArray.remove(removeIngredient);
-
-            parent.removeView(childText);
-            parent.removeView(childLayoutWithButton);
-            parent.removeView(parent);
-        }
-    };
-
     private TextWatcher onTextChangedListener = new TextWatcher() {
         @Override
         public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -115,8 +101,7 @@ public class EnterFragment extends Fragment {
     private View.OnClickListener onSearchButtonClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-
-            if (ingredientsArray.size() == 0) {
+            if (ingredients.size() == 0) {
                 Toast.makeText(getActivity(), R.string.empty_error_message, Toast.LENGTH_SHORT).show();
                 return;
             }
@@ -126,7 +111,7 @@ public class EnterFragment extends Fragment {
                 loadingPanel.setVisibility(View.VISIBLE);
             }
             JsonObject json = new JsonObject();
-            json.addProperty("products", String.valueOf(ingredientsArray));
+            json.addProperty("products", String.valueOf(ingredients));
 
             Retrofit retrofit = new Retrofit.Builder()
                     .baseUrl("http://195.133.1.169:8082/")
@@ -152,8 +137,8 @@ public class EnterFragment extends Fragment {
                                     return;
                                 }
 
-                                final List<Recipe> getRecipes = parseRecipe(body);
-                                ingredientsArray.clear();
+                            final List<Recipe> getRecipes = parseRecipe(body);
+                            ingredients.clear();
 
                                 Fragment recipesListFragment = new RecipesListFragment();
 
@@ -199,31 +184,38 @@ public class EnterFragment extends Fragment {
                 t.show();
                 return;
             }
-            ingredientsArray.add(ingredient);
 
-            enterIngredient.setText(R.string.empty_string);
-
-            LinearLayout layoutWithIngredientAndButton = new LinearLayout(getActivity());
-            layoutWithIngredientAndButton.setOrientation(LinearLayout.HORIZONTAL);
-
-            LinearLayout layoutWithButton = new LinearLayout(getActivity());
-            layoutWithButton.setGravity(Gravity.END);
-
-            Button remove = new Button(getActivity());
-            remove.setText(R.string.remove);
-            remove.setWidth(200);
-            remove.setOnClickListener(onRemoveButtonClickListener);
-            layoutWithButton.addView(remove);
-
-            TextView text = new TextView(getActivity());
-            text.setText(ingredient);
-            text.setGravity(Gravity.START);
-            text.setTextSize(20);
-            text.setWidth(800);
-            layoutWithIngredientAndButton.addView(text);
-            layoutWithIngredientAndButton.addView(layoutWithButton);
-
-            addedIngredients.addView(layoutWithIngredientAndButton);
+            if (ingredients.contains(ingredient.toLowerCase())) {
+                adapter.notifyItemChanged(ingredients.indexOf(ingredient.toLowerCase()));
+                return;
+            }
+//            ingredientsArray.add(ingredient);
+//
+//            enterIngredient.setText(R.string.empty_string);
+//
+//            LinearLayout layoutWithIngredientAndButton = new LinearLayout(getActivity());
+//            layoutWithIngredientAndButton.setOrientation(LinearLayout.HORIZONTAL);
+//
+//            LinearLayout layoutWithButton = new LinearLayout(getActivity());
+//            layoutWithButton.setGravity(Gravity.END);
+//
+//            Button remove = new Button(getActivity());
+//            remove.setText(R.string.remove);
+//            remove.setWidth(200);
+//            remove.setOnClickListener(onRemoveButtonClickListener);
+//            layoutWithButton.addView(remove);
+//
+//            TextView text = new TextView(getActivity());
+//            text.setText(ingredient);
+//            text.setGravity(Gravity.START);
+//            text.setTextSize(20);
+//            text.setWidth(800);
+//            layoutWithIngredientAndButton.addView(text);
+//            layoutWithIngredientAndButton.addView(layoutWithButton);
+//
+//            addedIngredients.addView(layoutWithIngredientAndButton);
+            ingredients.add(ingredient);
+            adapter.notifyItemChanged(0);
         }
     };
 
@@ -243,6 +235,21 @@ public class EnterFragment extends Fragment {
             container, @Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         View v = inflater.inflate(R.layout.enter_fr, container, false);
+        ingredients = new ArrayList<>();
+        adapter = new RecyclerAdapter(ingredients);
+        recyclerView = v.findViewById(R.id.recycler);
+        recyclerView.setAdapter(adapter);
+
+        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            if (container != null) {
+                recyclerView.setLayoutManager(new GridLayoutManager(container.getContext(), 2));
+            }
+        } else {
+            if (container != null) {
+                recyclerView.setLayoutManager(new GridLayoutManager(container.getContext(), 1));
+            }
+        }
+        adapter.notifyDataSetChanged();
 
         enterIngredient = v.findViewById(R.id.ingredient);
 
@@ -254,8 +261,6 @@ public class EnterFragment extends Fragment {
 
         addButton = v.findViewById(R.id.add_button);
         searchButton = v.findViewById(R.id.search_recipe);
-
-        addedIngredients = v.findViewById(R.id.add_ingredient_layout);
 
         addButton.setOnClickListener(onAddButtonClickListener);
         searchButton.setOnClickListener(onSearchButtonClickListener);

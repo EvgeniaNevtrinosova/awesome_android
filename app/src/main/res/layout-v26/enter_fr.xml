@@ -3,15 +3,15 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/lightGreen"
+    android:backgroundTint="@color/lightGreen"
     android:orientation="vertical">
 
     <TextView
         android:id="@+id/enter_ingredient"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:gravity="center"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
         android:hint="@string/enter_ingredient"
         android:textSize="25sp" />
 
@@ -19,42 +19,37 @@
         android:id="@+id/ingredient"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
         android:hint="@string/add" />
 
     <Button
         android:id="@+id/add_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:background="@color/blue_light"
+        android:layout_marginHorizontal="10dp"
+        android:background="@color/colorAccent"
+        android:backgroundTint="@android:color/holo_blue_light"
         android:text="@string/add_button" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycler"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_margin="10dp"
-        android:layout_weight="1" />
-
+        android:layout_height="wrap_content" />
 
     <Button
         android:id="@+id/search_recipe"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        android:gravity="center"
+        android:gravity="bottom"
         android:text="@string/search" />
 
     <RelativeLayout
         android:id="@+id/loadingPanel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:gravity="center"
-        android:visibility="gone">
+        android:visibility="invisible">
 
         <ProgressBar
             android:id="@+id/progress_bar"
@@ -62,5 +57,4 @@
             android:layout_height="wrap_content"
             android:indeterminate="true" />
     </RelativeLayout>
-
 </LinearLayout>
