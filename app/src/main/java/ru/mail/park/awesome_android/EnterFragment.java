@@ -189,31 +189,8 @@ public class EnterFragment extends Fragment {
                 adapter.notifyItemChanged(ingredients.indexOf(ingredient.toLowerCase()));
                 return;
             }
-//            ingredientsArray.add(ingredient);
-//
-//            enterIngredient.setText(R.string.empty_string);
-//
-//            LinearLayout layoutWithIngredientAndButton = new LinearLayout(getActivity());
-//            layoutWithIngredientAndButton.setOrientation(LinearLayout.HORIZONTAL);
-//
-//            LinearLayout layoutWithButton = new LinearLayout(getActivity());
-//            layoutWithButton.setGravity(Gravity.END);
-//
-//            Button remove = new Button(getActivity());
-//            remove.setText(R.string.remove);
-//            remove.setWidth(200);
-//            remove.setOnClickListener(onRemoveButtonClickListener);
-//            layoutWithButton.addView(remove);
-//
-//            TextView text = new TextView(getActivity());
-//            text.setText(ingredient);
-//            text.setGravity(Gravity.START);
-//            text.setTextSize(20);
-//            text.setWidth(800);
-//            layoutWithIngredientAndButton.addView(text);
-//            layoutWithIngredientAndButton.addView(layoutWithButton);
-//
-//            addedIngredients.addView(layoutWithIngredientAndButton);
+
+            enterIngredient.setText(R.string.empty_string);
             ingredients.add(ingredient);
             adapter.notifyItemChanged(0);
         }
