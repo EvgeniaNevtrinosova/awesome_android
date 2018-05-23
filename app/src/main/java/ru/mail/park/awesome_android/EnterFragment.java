@@ -49,7 +49,6 @@ public class EnterFragment extends Fragment {
     private LinearLayout addedIngredients;
     private ArrayList ingredientsArray = new ArrayList();
     private String ingredient;
-    private static Handler h;
     private static final Gson GSON = new GsonBuilder()
             .create();
 
@@ -209,9 +208,6 @@ public class EnterFragment extends Fragment {
 
         addButton.setOnClickListener(onAddButtonClickListener);
         searchButton.setOnClickListener(onSearchButtonClickListener);
-        h = new Handler() {
-
-        };
         return v;
     }
 }
