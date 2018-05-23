@@ -1,12 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string-array name="autoCompleteArray">
-        <item>огурец</item>
+        <item>хлеб</item>
+        <item>яйца</item>
         <item>томат</item>
-        <item>картошка</item>
-        <item>моркошка</item>
+        <item>хрен</item>
+        <item>огурец</item>
+        <item>дошик</item>
         <item>говно</item>
         <item>палки</item>
-        <item>хрен</item>
+        <item>вода</item>
+        <item>молоко</item>
+        <item>пшено</item>
+        <item>сахар</item>
+        <item>соль</item>
+        <item>нигилизм</item>
+        <item>выхино</item>
+        <item>мука</item>
+        <item>сахар</item>
+        <item>масло</item>
+        <item>оптимизм</item>
+        <item>макароны</item>
+        <item>чеснок</item>
+        <item>шпроты</item>
+        <item>картофель</item>
+        <item>пельмени</item>
+        <item>лаврушка</item>
     </string-array>
 </resources>

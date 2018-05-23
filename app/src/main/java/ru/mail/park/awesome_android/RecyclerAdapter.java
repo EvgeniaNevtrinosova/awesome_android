@@ -50,9 +50,9 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyHold
         holder.removeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ingredients.remove(position);
-                notifyItemRemoved(position);
-                notifyItemRangeChanged(position, ingredients.size());
+                ingredients.remove(holder.getAdapterPosition());
+                notifyItemRemoved(holder.getAdapterPosition());
+                notifyItemRangeChanged(holder.getAdapterPosition(), ingredients.size());
                 setAnimation(view);
             }
         })
