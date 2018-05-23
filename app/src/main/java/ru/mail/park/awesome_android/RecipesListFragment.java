@@ -14,6 +14,7 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+import java.io.Serializable;
 import java.util.ArrayList;
 
 
@@ -32,8 +33,6 @@ public class RecipesListFragment extends Fragment {
 
                 FragmentManager fragmentManager = getFragmentManager();
                 FragmentTransaction transaction = fragmentManager.beginTransaction();
-
-                //transaction.remove(fragmentManager.findFragmentById(R.id.fragmentContainer));
 
                 transaction
                         .replace(R.id.fragmentContainer, recipeInformationFragment)
@@ -85,12 +84,12 @@ public class RecipesListFragment extends Fragment {
             recipeTitle.addView(name);
 
             TextView products = new TextView(getActivity());
-            ArrayList productsList;
+            ArrayList<String> productsList = new ArrayList<String>();
             productsList = recipe.getProducts();
             StringBuilder listOfProducts = new StringBuilder();
 
             String prefix = "";
-            for (Object str: productsList) {
+            for (String str: productsList) {
                 listOfProducts.append(prefix);
                 prefix = ",";
                 listOfProducts.append(str);
@@ -109,7 +108,7 @@ public class RecipesListFragment extends Fragment {
     }
 
     private void formingRecipesList() {
-        ArrayList recipesFromServer = new ArrayList();
+        ArrayList<Serializable> recipesFromServer = new ArrayList<>();
         Bundle bundle = getArguments();
         for (int i = 0; i < bundle.getInt("size"); i++) {
             try {

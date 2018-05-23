@@ -17,8 +17,6 @@ public class RecipeInformationFragment extends Fragment {
     private TextView recipeName;
     private TextView recipeProducts;
     private TextView recipeText;
-    private Button recipeListButton;
-    private Button mainMenuButton;
 
     private void getRecipe() {
         Object clickRecipe = new Object();
@@ -35,10 +33,7 @@ public class RecipeInformationFragment extends Fragment {
 
     private void writeRecipe() {
         recipeName.setText(recipe.getName());
-
-        TextView products = new TextView(getActivity());
-        ArrayList<String> productsList = new ArrayList<String>();
-        productsList = recipe.getProducts();
+        ArrayList<String> productsList = recipe.getProducts();
         StringBuilder listOfProducts = new StringBuilder();
 
         String prefix = "";
@@ -69,19 +64,14 @@ public class RecipeInformationFragment extends Fragment {
         @Override
         public void onClick(View v) {
             FragmentManager fragmentManager = getFragmentManager();
-            int recipeListFragmentIndex = fragmentManager.getBackStackEntryCount() - 1;
-
-            FragmentManager.BackStackEntry backStackEntry = fragmentManager.getBackStackEntryAt(recipeListFragmentIndex);
-
-            Fragment listFragment1 = fragmentManager.findFragmentByTag("RecipeList Tag");
+            Fragment listFragment = fragmentManager.findFragmentByTag("RecipeList Tag");
 
             fragmentManager.beginTransaction()
-                    .replace(R.id.fragmentContainer, listFragment1)
+                    .replace(R.id.fragmentContainer, listFragment)
                     .addToBackStack(null)
                     .commit();
         }
     };
-
 
 
     @Nullable
@@ -93,8 +83,8 @@ public class RecipeInformationFragment extends Fragment {
         recipeName = v.findViewById(R.id.recipe_name);
         recipeProducts = v.findViewById(R.id.recipe_products);
         recipeText = v.findViewById(R.id.recipe_text);
-        recipeListButton = v.findViewById(R.id.recipe_button);
-        mainMenuButton = v.findViewById(R.id.main_button);
+        Button recipeListButton = v.findViewById(R.id.recipe_button);
+        Button mainMenuButton = v.findViewById(R.id.main_button);
 
         recipeListButton.setOnClickListener(onRecipeListClickListener);
         mainMenuButton.setOnClickListener(onMainClickListener);

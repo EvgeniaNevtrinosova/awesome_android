@@ -6,6 +6,7 @@ import com.google.gson.annotations.SerializedName;
 import java.io.Serializable;
 import java.util.ArrayList;
 
+
 public class Recipe implements Serializable {
     @Expose()
     @SerializedName("recipe_name")
@@ -13,7 +14,7 @@ public class Recipe implements Serializable {
 
     @Expose()
     @SerializedName("recipe_products")
-    private ArrayList<String> products = new ArrayList();
+    private ArrayList<String> products = new ArrayList<>();
 
     @Expose()
     @SerializedName("recipe_text")
@@ -27,14 +28,14 @@ public class Recipe implements Serializable {
         this.name = name;
     }
 
-
-    public ArrayList getProducts() {
+    @SuppressWarnings("WeakerAccess")
+    public ArrayList<String> getProducts() {
         return products;
     }
 
-    public void setProducts(ArrayList<String> products) {
-        this.products = products;
-    }
+//    public void setProducts(ArrayList<String> products) {
+//        this.products = products;
+//    }
 
 
     public String getText() {
