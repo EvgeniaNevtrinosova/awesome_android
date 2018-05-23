@@ -49,8 +49,10 @@ public class EnterFragment extends Fragment {
     private RelativeLayout loadingPanel;
     private AutoCompleteTextView enterIngredient;
     private ArrayList<String> ingredients;
+    private Call<ResponseBody> post;
     RecyclerView recyclerView;
     RecyclerAdapter adapter;
+
     private Handler handler = new MyHandler(this);
     private static final Gson GSON = new GsonBuilder()
             .create();
@@ -100,13 +102,21 @@ public class EnterFragment extends Fragment {
 
     private View.OnClickListener onSearchButtonClickListener = new View.OnClickListener() {
         @Override
-        public void onClick(View v) {
+        public void onClick(final View v) {
             if (ingredients.size() == 0) {
                 Toast.makeText(getActivity(), R.string.empty_error_message, Toast.LENGTH_SHORT).show();
                 return;
             }
             v.setVisibility(View.GONE);
             loadingPanel = getActivity().findViewById(R.id.loadingPanel);
+            loadingPanel.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    post.cancel();
+                    loadingPanel.setVisibility(View.GONE);
+                    v.setVisibility(View.VISIBLE);
+                }
+            });
             if (loadingPanel != null) {
                 loadingPanel.setVisibility(View.VISIBLE);
             }
@@ -119,7 +129,7 @@ public class EnterFragment extends Fragment {
                     .build();
 
             Service service = retrofit.create(Service.class);
-            final Call<ResponseBody> post = service.setIngredients(json);
+            post = service.setIngredients(json);
             post.enqueue(new Callback<ResponseBody>() {
                 @Override
 
