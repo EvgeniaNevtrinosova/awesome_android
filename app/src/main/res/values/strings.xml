@@ -22,4 +22,6 @@
     <string name="empty_response_body">[]</string>
     <string name="size_key">size</string>
     <string name="recipe_key">recipe </string>
+    <string name="recipe">recipe</string>
+    <string name="prefix">,</string>
 </resources>

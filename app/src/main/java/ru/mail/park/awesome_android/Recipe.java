@@ -33,11 +33,6 @@ public class Recipe implements Serializable {
         return products;
     }
 
-//    public void setProducts(ArrayList<String> products) {
-//        this.products = products;
-//    }
-
-
     public String getText() {
         return text;
     }

@@ -27,7 +27,7 @@ public class RecipesListFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Bundle bundle = new Bundle();
-                bundle.putSerializable("recipe", recipe);
+                bundle.putSerializable(getResources().getString(R.string.recipe), recipe);
                 Fragment recipeInformationFragment = new RecipeInformationFragment();
                 recipeInformationFragment.setArguments(bundle);
 
@@ -36,7 +36,7 @@ public class RecipesListFragment extends Fragment {
 
                 transaction
                         .replace(R.id.fragmentContainer, recipeInformationFragment)
-                        .addToBackStack("Tag name")
+                        .addToBackStack(null)
                         .commit();
             }
         });
@@ -63,24 +63,29 @@ public class RecipesListFragment extends Fragment {
                     LinearLayout.LayoutParams.WRAP_CONTENT,
                     LinearLayout.LayoutParams.WRAP_CONTENT
             );
-            params.setMargins(20, 30, 20, 30);
+
+            int margin_left_and_right = getResources().getInteger(R.integer.recipe_margin_left_and_right);
+            int margin_top_and_bottom = getResources().getInteger(R.integer.recipe_margin_top_and_bottom);
+
+            params.setMargins(margin_left_and_right, margin_top_and_bottom, margin_left_and_right, margin_top_and_bottom);
 
             recipeTitle.setLayoutParams(params);
             recipeTitle.setOrientation(LinearLayout.VERTICAL);
             recipeTitle.setClickable(true);
 
             GradientDrawable border = new GradientDrawable();
-            border.setColor(0xFFFFFFFF);
-            border.setStroke(10, 0xFF000000);
+            border.setColor(getResources().getColor(R.color.white));
+            border.setStroke(getResources().getInteger(R.integer.recipe_border), getResources().getColor(R.color.black));
             recipeTitle.setBackground(border);
 
-            recipeTitle.setPadding(16, 16, 16, 16);
+            int padding = getResources().getInteger(R.integer.recipe_title_padding);
+            recipeTitle.setPadding(padding, padding, padding, padding);
 
             TextView name = new TextView(getActivity());
             name.setText(recipe.getName());
             name.setGravity(Gravity.START);
-            name.setTextSize(20);
-            name.setWidth(800);
+            name.setTextSize(getResources().getInteger(R.integer.recipe_name_text_size));
+            name.setWidth(getResources().getInteger(R.integer.recipe_name_width));
             recipeTitle.addView(name);
 
             TextView products = new TextView(getActivity());
@@ -90,14 +95,14 @@ public class RecipesListFragment extends Fragment {
             String prefix = "";
             for (String str: productsList) {
                 listOfProducts.append(prefix);
-                prefix = ",";
+                prefix = getResources().getString(R.string.prefix);
                 listOfProducts.append(str);
             }
 
             products.setText(listOfProducts.toString());
             products.setGravity(Gravity.START);
-            products.setTextSize(20);
-            products.setWidth(1000);
+            products.setTextSize(getResources().getInteger(R.integer.products_list_text_size));
+            products.setWidth(getResources().getInteger(R.integer.products_list_width));
             recipeTitle.addView(products);
 
             setOnClick(recipeTitle, recipe);
@@ -109,6 +114,7 @@ public class RecipesListFragment extends Fragment {
     private void formingRecipesList() {
         ArrayList<Serializable> recipesFromServer = new ArrayList<>();
         Bundle bundle = getArguments();
+
         for (int i = 0; i < bundle.getInt("size"); i++) {
             try {
                 recipesFromServer.add(bundle.getSerializable("recipe " + i));
@@ -128,7 +134,7 @@ public class RecipesListFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        View v = inflater.inflate(R.layout.get_list_fr, container, false);
+        View v = inflater.inflate(R.layout.get_list_fr, container, getResources().getBoolean(R.bool.attach_to_root));
 
         recipeLayout = v.findViewById(R.id.list_of_recipes);
         Button mainMenuButton = v.findViewById(R.id.main_menu_button_from_recipe_list);

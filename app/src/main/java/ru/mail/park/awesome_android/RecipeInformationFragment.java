@@ -23,7 +23,7 @@ public class RecipeInformationFragment extends Fragment {
         Bundle bundle = getArguments();
 
         try {
-            clickRecipe = bundle.getSerializable("recipe");
+            clickRecipe = bundle.getSerializable(getResources().getString(R.string.recipe));
         } catch (final Exception e) {
             Toast errorMessage = Toast.makeText(getContext(), R.string.error_message, Toast.LENGTH_SHORT);
             errorMessage.show();
@@ -39,11 +39,10 @@ public class RecipeInformationFragment extends Fragment {
         String prefix = "";
         for (String str: productsList) {
             listOfProducts.append(prefix);
-            prefix = ",";
+            prefix = getResources().getString(R.string.prefix);
             listOfProducts.append(str);
         }
         recipeProducts.setText(listOfProducts.toString());
-
         recipeText.setText(recipe.getText());
     }
 
@@ -64,7 +63,7 @@ public class RecipeInformationFragment extends Fragment {
         @Override
         public void onClick(View v) {
             FragmentManager fragmentManager = getFragmentManager();
-            Fragment listFragment = fragmentManager.findFragmentByTag("RecipeList Tag");
+            Fragment listFragment = fragmentManager.findFragmentByTag(getResources().getString(R.string.recipe_tag));
 
             fragmentManager.beginTransaction()
                     .replace(R.id.fragmentContainer, listFragment)
@@ -78,7 +77,7 @@ public class RecipeInformationFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        View v = inflater.inflate(R.layout.info_recipe_fr, container, false);
+        View v = inflater.inflate(R.layout.info_recipe_fr, container, getResources().getBoolean(R.bool.attach_to_root));
 
         recipeName = v.findViewById(R.id.recipe_name);
         recipeProducts = v.findViewById(R.id.recipe_products);

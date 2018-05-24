@@ -22,7 +22,6 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyHold
 
     public static class MyHolder extends RecyclerView.ViewHolder {
 
-//        private final CardView card;
         private final TextView text;
         private final Button removeButton;
 
@@ -30,7 +29,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyHold
             super(card);
             text = card.findViewById(R.id.text);
             removeButton = card.findViewById(R.id.remove_button);
-//            this.card = card;
+
         }
 
         public TextView getText() {
@@ -61,7 +60,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyHold
 
     private void setAnimation(View viewToAnimate) {
             Animation animation = AnimationUtils.loadAnimation(viewToAnimate.getContext(), android.R.anim.slide_in_left);
-            animation.setDuration(2000);
+            animation.setDuration(R.integer.recycler_duration);
             viewToAnimate.startAnimation(animation);
     }
 

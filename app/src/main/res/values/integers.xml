@@ -6,4 +6,13 @@
     <integer name="toast_yOffset">0</integer>
     <integer name="adapter_position">0</integer>
     <integer name="empty_size">0</integer>
+    <integer name="recipe_title_padding">16</integer>
+    <integer name="recipe_name_text_size">20</integer>
+    <integer name="recipe_name_width">800</integer>
+    <integer name="recipe_margin_left_and_right">20</integer>
+    <integer name="recipe_margin_top_and_bottom">30</integer>
+    <integer name="products_list_text_size">20</integer>
+    <integer name="products_list_width">1000</integer>
+    <integer name="recipe_border">10</integer>
+    <integer name="recycler_duration">2000</integer>
 </resources>
