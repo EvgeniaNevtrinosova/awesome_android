@@ -22,20 +22,17 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
-
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
-
 import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -76,18 +73,16 @@ public class EnterFragment extends Fragment {
             frag.get().loadingPanel.setVisibility(View.GONE);
             frag.get().searchButton.setVisibility(View.VISIBLE);
         }
-
     }
 
     private TextWatcher onTextChangedListener = new TextWatcher() {
         @Override
-        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-        }
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
 
         @Override
         public void onTextChanged(CharSequence s, int start, int before, int count) {
-            if (s.toString().contains("\n")) {
-                s = s.toString().replace("\n", "");
+            if (s.toString().contains(getResources().getString(R.string.break_symbol))) {
+                s = s.toString().replace(getResources().getString(R.string.break_symbol), getResources().getString(R.string.empty_string));
                 enterIngredient.setText(s);
                 addButton.performClick();
             }
@@ -103,7 +98,7 @@ public class EnterFragment extends Fragment {
     private View.OnClickListener onSearchButtonClickListener = new View.OnClickListener() {
         @Override
         public void onClick(final View v) {
-            if (ingredients.size() == 0) {
+            if (ingredients.size() == getResources().getInteger(R.integer.empty_size)) {
                 Toast.makeText(getActivity(), R.string.empty_error_message, Toast.LENGTH_SHORT).show();
                 return;
             }
@@ -121,10 +116,10 @@ public class EnterFragment extends Fragment {
                 loadingPanel.setVisibility(View.VISIBLE);
             }
             JsonObject json = new JsonObject();
-            json.addProperty("products", String.valueOf(ingredients));
+            json.addProperty(getResources().getString(R.string.products_property), String.valueOf(ingredients));
 
             Retrofit retrofit = new Retrofit.Builder()
-                    .baseUrl("http://195.133.1.169:8082/")
+                    .baseUrl(getResources().getString(R.string.base_url))
                     .addConverterFactory(GsonConverterFactory.create())
                     .build();
 
@@ -136,19 +131,19 @@ public class EnterFragment extends Fragment {
                 public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
                     if (response.isSuccessful()) {
                         try {
-                            handler.sendEmptyMessage(0);
+                            handler.sendEmptyMessage(getResources().getInteger(R.integer.empty_size));
 
                             ResponseBody responseBody = response.body();
                             if (responseBody != null) {
                                String body = responseBody.string();
 
-                                if (body != null && body.equals("[]")) {
+                                if (body != null && body.equals(getResources().getString(R.string.empty_response_body))) {
                                     Toast.makeText(getActivity(), R.string.empty_recipes_list, Toast.LENGTH_SHORT).show();
                                     return;
                                 }
 
-                            final List<Recipe> getRecipes = parseRecipe(body);
-                            ingredients.clear();
+                                final List<Recipe> getRecipes = parseRecipe(body);
+                                ingredients.clear();
 
                                 Fragment recipesListFragment = new RecipesListFragment();
 
@@ -161,7 +156,7 @@ public class EnterFragment extends Fragment {
                                 recipesListFragment.setArguments(bundle);
                                 FragmentManager fragmentManager = getFragmentManager();
                                 fragmentManager.beginTransaction()
-                                        .replace(R.id.fragmentContainer, recipesListFragment, "RecipeList Tag")
+                                        .replace(R.id.fragmentContainer, recipesListFragment, getResources().getString(R.string.recipe_tag))
                                         .addToBackStack(null)
                                         .commit();
                             }
@@ -176,8 +171,6 @@ public class EnterFragment extends Fragment {
 
                 }
             });
-
-
         }
     };
 
@@ -185,12 +178,12 @@ public class EnterFragment extends Fragment {
         @Override
         public void onClick(View view) {
             String ingredient = enterIngredient.getText().toString();
-            if (ingredient.length() == 0) {
+            if (ingredient.length() == getResources().getInteger(R.integer.empty_size)) {
                 return;
             }
             if (!Arrays.asList(getResources().getStringArray(R.array.autoCompleteArray)).contains(ingredient.toLowerCase())) {
                 Toast t = Toast.makeText(getActivity(), R.string.not_found_ingredients, Toast.LENGTH_SHORT);
-                t.setGravity(Gravity.CENTER_VERTICAL, 0, 0);
+                t.setGravity(Gravity.CENTER_VERTICAL, getResources().getInteger(R.integer.toast_xOffset), getResources().getInteger(R.integer.toast_xOffset));
                 t.show();
                 return;
             }
@@ -202,7 +195,7 @@ public class EnterFragment extends Fragment {
 
             enterIngredient.setText(R.string.empty_string);
             ingredients.add(ingredient);
-            adapter.notifyItemChanged(0);
+            adapter.notifyItemChanged(getResources().getInteger(R.integer.adapter_position));
         }
     };
 
@@ -221,7 +214,7 @@ public class EnterFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup
             container, @Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        View v = inflater.inflate(R.layout.enter_fr, container, false);
+        View v = inflater.inflate(R.layout.enter_fr, container, getResources().getBoolean(R.bool.attach_to_root));
         ingredients = new ArrayList<>();
         adapter = new RecyclerAdapter(ingredients);
         recyclerView = v.findViewById(R.id.recycler);
@@ -229,11 +222,11 @@ public class EnterFragment extends Fragment {
 
         if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
             if (container != null) {
-                recyclerView.setLayoutManager(new GridLayoutManager(container.getContext(), 2));
+                recyclerView.setLayoutManager(new GridLayoutManager(container.getContext(), getResources().getInteger(R.integer.landscape_span)));
             }
         } else {
             if (container != null) {
-                recyclerView.setLayoutManager(new GridLayoutManager(container.getContext(), 1));
+                recyclerView.setLayoutManager(new GridLayoutManager(container.getContext(), getResources().getInteger(R.integer.portrait_span)));
             }
         }
         adapter.notifyDataSetChanged();

@@ -46,7 +46,8 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
         android:gravity="center"
-        android:text="@string/search" />
+        android:text="@string/search"
+        style="?android:attr/buttonBarButtonStyle"/>
 
     <RelativeLayout
         android:id="@+id/loadingPanel"

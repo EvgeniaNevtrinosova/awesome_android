@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <integer name="landscape_span">2</integer>
+    <integer name="portrait_span">1</integer>
+    <integer name="toast_xOffset">0</integer>
+    <integer name="toast_yOffset">0</integer>
+    <integer name="adapter_position">0</integer>
+    <integer name="empty_size">0</integer>
+</resources>

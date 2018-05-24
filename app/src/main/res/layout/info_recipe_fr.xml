@@ -24,15 +24,20 @@
         android:layout_marginTop="10dp"
         android:textSize="18sp" />
 
-    <TextView
-        android:id="@+id/recipe_text"
-        android:layout_width="341dp"
-        android:layout_height="259dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginTop="10dp"
-        android:gravity="center_horizontal"
-        android:textSize="18sp" />
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="280dp">
+        <TextView
+            android:id="@+id/recipe_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="10dp"
+            android:gravity="center_horizontal"
+            android:textSize="18sp" />
+    </ScrollView>
 
     <LinearLayout
         android:orientation="horizontal"
