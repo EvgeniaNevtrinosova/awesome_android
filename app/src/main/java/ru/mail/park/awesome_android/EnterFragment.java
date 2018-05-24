@@ -112,11 +112,13 @@ public class EnterFragment extends Fragment {
                     v.setVisibility(View.VISIBLE);
                 }
             });
+
             if (loadingPanel != null) {
                 loadingPanel.setVisibility(View.VISIBLE);
             }
             JsonObject json = new JsonObject();
             json.addProperty(getResources().getString(R.string.products_property), String.valueOf(ingredients));
+
 
             Retrofit retrofit = new Retrofit.Builder()
                     .baseUrl(getResources().getString(R.string.base_url))
@@ -124,16 +126,18 @@ public class EnterFragment extends Fragment {
                     .build();
 
             Service service = retrofit.create(Service.class);
+
             post = service.setIngredients(json);
+
             post.enqueue(new Callback<ResponseBody>() {
                 @Override
-
                 public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
                     if (response.isSuccessful()) {
                         try {
                             handler.sendEmptyMessage(getResources().getInteger(R.integer.empty_size));
 
                             ResponseBody responseBody = response.body();
+
                             if (responseBody != null) {
                                String body = responseBody.string();
 
@@ -143,6 +147,7 @@ public class EnterFragment extends Fragment {
                                 }
 
                                 final List<Recipe> getRecipes = parseRecipe(body);
+
                                 ingredients.clear();
 
                                 Fragment recipesListFragment = new RecipesListFragment();
@@ -168,6 +173,13 @@ public class EnterFragment extends Fragment {
 
                 @Override
                 public void onFailure(@NonNull Call<ResponseBody> call, @NonNull Throwable t) {
+                    if(t.getMessage().equals(getResources().getString(R.string.network_throwable))) {
+                        Toast.makeText(getActivity(), getResources().getString(R.string.network_error), Toast.LENGTH_LONG).show();
+                    }
+
+                    if (t.getMessage().equals(getResources().getString(R.string.server_throwable))) {
+                        Toast.makeText(getActivity(), getResources().getString(R.string.server_error), Toast.LENGTH_LONG).show();
+                    }
 
                 }
             });
@@ -214,6 +226,8 @@ public class EnterFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup
             container, @Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+
         View v = inflater.inflate(R.layout.enter_fr, container, getResources().getBoolean(R.bool.attach_to_root));
         ingredients = new ArrayList<>();
         adapter = new RecyclerAdapter(ingredients);

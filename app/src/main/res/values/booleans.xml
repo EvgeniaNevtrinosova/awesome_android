@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <bool name="attach_to_root">false</bool>
+    <bool name="DEBUG">true</bool>
 </resources>

@@ -13,7 +13,7 @@
     <string name="empty_error_message">Для поиска необходимо выбрать продукты.</string>
     <string name="empty_recipes_list">К сожалению, для вас ничего не нашлось:(</string>
     <string name="not_found_ingredients">Я не знаю таких продуктов:(</string>
-    <string name="network_error">Ошибка с соединением:(</string>
+    <string name="network_error">Проблемы с соединением:(</string>
     <string name="to_recipe_list">К списку рецептов</string>
     <string name="to_main_menu">В главное меню</string>
     <string name="example">sfffa</string>
@@ -24,4 +24,7 @@
     <string name="recipe_key">recipe </string>
     <string name="recipe">recipe</string>
     <string name="prefix">,</string>
+    <string name="network_throwable">Network is unreachable</string>
+    <string name="server_throwable">Failed to connect to /195.133.1.169:8082</string>
+    <string name="server_error">Ошибка соединения с сервером:(</string>
 </resources>
