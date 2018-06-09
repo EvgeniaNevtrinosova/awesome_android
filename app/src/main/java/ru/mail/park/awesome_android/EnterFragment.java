@@ -47,8 +47,12 @@ public class EnterFragment extends Fragment {
     private AutoCompleteTextView enterIngredient;
     private ArrayList<String> ingredients;
     private Call<ResponseBody> post;
+    private List<Recipe> getRecipes;
+
+
     RecyclerView recyclerView;
     RecyclerAdapter adapter;
+    NetworkInteraction networkInteraction = new NetworkInteraction();
 
     private Handler handler = new MyHandler(this);
     private static final Gson GSON = new GsonBuilder()
@@ -116,73 +120,32 @@ public class EnterFragment extends Fragment {
             if (loadingPanel != null) {
                 loadingPanel.setVisibility(View.VISIBLE);
             }
-            JsonObject json = new JsonObject();
-            json.addProperty(getResources().getString(R.string.products_property), String.valueOf(ingredients));
 
+            try {
+                networkInteraction.DataTransmissionAndReception(ingredients, handler, post, getActivity());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
 
-            Retrofit retrofit = new Retrofit.Builder()
-                    .baseUrl(getResources().getString(R.string.base_url))
-                    .addConverterFactory(GsonConverterFactory.create())
-                    .build();
+            getRecipes = networkInteraction.getGetRecipes();
+            ingredients.clear();
 
-            Service service = retrofit.create(Service.class);
+            if (getRecipes != null) {
+                Fragment recipesListFragment = new RecipesListFragment();
 
-            post = service.setIngredients(json);
-
-            post.enqueue(new Callback<ResponseBody>() {
-                @Override
-                public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {
-                    if (response.isSuccessful()) {
-                        try {
-                            handler.sendEmptyMessage(getResources().getInteger(R.integer.empty_size));
-
-                            ResponseBody responseBody = response.body();
-
-                            if (responseBody != null) {
-                               String body = responseBody.string();
-
-                                if (body != null && body.equals(getResources().getString(R.string.empty_response_body))) {
-                                    Toast.makeText(getActivity(), R.string.empty_recipes_list, Toast.LENGTH_SHORT).show();
-                                    return;
-                                }
-
-                                final List<Recipe> getRecipes = parseRecipe(body);
-
-                                ingredients.clear();
-
-                                Fragment recipesListFragment = new RecipesListFragment();
-
-                                Bundle bundle = new Bundle();
-                                bundle.putInt("size", getRecipes.size());
-                                for (int i = 0; i < getRecipes.size(); i++) {
-                                    bundle.putSerializable("recipe " + i, getRecipes.get(i));
-                                }
-
-                                recipesListFragment.setArguments(bundle);
-                                FragmentManager fragmentManager = getFragmentManager();
-                                fragmentManager.beginTransaction()
-                                        .replace(R.id.fragmentContainer, recipesListFragment, getResources().getString(R.string.recipe_tag))
-                                        .addToBackStack(null)
-                                        .commit();
-                            }
-                        } catch (IOException e) {
-                            Toast.makeText(getActivity(), R.string.error_message, Toast.LENGTH_SHORT).show();
-                        }
-                    }
+                Bundle bundle = new Bundle();
+                bundle.putInt("size", getRecipes.size());
+                for (int i = 0; i < getRecipes.size(); i++) {
+                    bundle.putSerializable("recipe " + i, getRecipes.get(i));
                 }
 
-                @Override
-                public void onFailure(@NonNull Call<ResponseBody> call, @NonNull Throwable t) {
-                    if(t.getMessage().equals(getResources().getString(R.string.network_throwable))) {
-                        Toast.makeText(getActivity(), getResources().getString(R.string.network_error), Toast.LENGTH_LONG).show();
-                    }
-
-                    if (t.getMessage().equals(getResources().getString(R.string.server_throwable))) {
-                        Toast.makeText(getActivity(), getResources().getString(R.string.server_error), Toast.LENGTH_LONG).show();
-                    }
-
-                }
-            });
+                recipesListFragment.setArguments(bundle);
+                FragmentManager fragmentManager = getFragmentManager();
+                fragmentManager.beginTransaction()
+                        .replace(R.id.fragmentContainer, recipesListFragment, getResources().getString(R.string.recipe_tag))
+                        .addToBackStack(null)
+                        .commit();
+            }
         }
     };
 
@@ -210,16 +173,6 @@ public class EnterFragment extends Fragment {
             adapter.notifyItemChanged(getResources().getInteger(R.integer.adapter_position));
         }
     };
-
-    public List<Recipe> parseRecipe(final String body) throws IOException {
-        try {
-            Type listType = new TypeToken<List<Recipe>>() {
-            }.getType();
-            return GSON.fromJson(body, listType);
-        } catch (JsonSyntaxException e) {
-            throw new IOException(e);
-        }
-    }
 
     @Nullable
     @Override
