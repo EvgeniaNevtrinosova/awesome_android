@@ -12,14 +12,13 @@
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
         android:layout_marginTop="8dp"
-        android:layout_marginBottom="8dp"
         android:gravity="center"
         android:text="@string/enter_ingredient"
         android:textColor="@color/primaryText"
         android:textSize="24sp"/>
 
     <LinearLayout
-        android:layout_width="344dp"
+        android:layout_width="576dp"
         android:layout_height="40dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
@@ -27,7 +26,7 @@
 
         <AutoCompleteTextView
             android:id="@+id/ingredient"
-            android:layout_width="296dp"
+            android:layout_width="520dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
 
@@ -43,6 +42,7 @@
             android:layout_gravity="center"
             android:drawableEnd="@drawable/ic_add_black_32dp" />
 
+
     </LinearLayout>
 
     <android.support.v7.widget.RecyclerView
@@ -50,7 +50,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_margin="8dp"
-        android:layout_weight="1" />
+        android:layout_weight="1"/>
 
     <Button
         android:id="@+id/search_recipe"
@@ -73,7 +73,7 @@
             android:id="@+id/progress_bar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:indeterminate="true" />
+            android:indeterminate="true"/>
     </RelativeLayout>
 
 </LinearLayout>

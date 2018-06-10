@@ -8,7 +8,7 @@
     <TextView
         android:id="@+id/recipe_name"
         android:layout_width="match_parent"
-        android:layout_height="48dp"
+        android:layout_height="wrap_content"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
         android:layout_marginTop="8dp"
@@ -22,22 +22,20 @@
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
         android:layout_marginTop="8dp"
-        android:layout_marginBottom="8dp"
         android:textSize="16sp" />
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="328dp">
+        android:layout_height="144dp">
 
         <TextView
             android:id="@+id/recipe_text"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="64dp"
             android:layout_marginEnd="8dp"
             android:layout_marginLeft="8dp"
             android:layout_marginRight="8dp"
             android:layout_marginTop="8dp"
-            android:layout_marginBottom="8dp"
             android:gravity="center_horizontal"
             android:textSize="16sp" />
     </ScrollView>
@@ -53,7 +51,6 @@
 
         <Button
             android:id="@+id/recipe_button"
-
             android:layout_width="0.0dip"
             android:layout_height="fill_parent"
             android:layout_weight="1.0"
