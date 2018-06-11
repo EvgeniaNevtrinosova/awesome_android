@@ -5,7 +5,6 @@ import android.content.res.Resources;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -24,21 +23,13 @@ import android.widget.RelativeLayout;
 import android.widget.Toast;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonSyntaxException;
-import com.google.gson.reflect.TypeToken;
 import java.io.IOException;
 import java.lang.ref.WeakReference;
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 public class EnterFragment extends Fragment {
     private Button addButton;
@@ -98,6 +89,12 @@ public class EnterFragment extends Fragment {
         }
     };
 
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putStringArrayList("ingredients", ingredients);
+    }
+
 
     private View.OnClickListener onSearchButtonClickListener = new View.OnClickListener() {
         @Override
@@ -106,6 +103,7 @@ public class EnterFragment extends Fragment {
                 Toast.makeText(getActivity(), R.string.empty_error_message, Toast.LENGTH_SHORT).show();
                 return;
             }
+
             v.setVisibility(View.GONE);
             loadingPanel = getActivity().findViewById(R.id.loadingPanel);
             loadingPanel.setOnClickListener(new View.OnClickListener() {
@@ -135,6 +133,7 @@ public class EnterFragment extends Fragment {
 
                 Bundle bundle = new Bundle();
                 bundle.putInt("size", getRecipes.size());
+
                 for (int i = 0; i < getRecipes.size(); i++) {
                     bundle.putSerializable("recipe " + i, getRecipes.get(i));
                 }
@@ -153,6 +152,7 @@ public class EnterFragment extends Fragment {
         @Override
         public void onClick(View view) {
             String ingredient = enterIngredient.getText().toString();
+
             if (ingredient.length() == getResources().getInteger(R.integer.empty_size)) {
                 return;
             }
@@ -180,9 +180,15 @@ public class EnterFragment extends Fragment {
             container, @Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-
         View v = inflater.inflate(R.layout.enter_fr, container, getResources().getBoolean(R.bool.attach_to_root));
-        ingredients = new ArrayList<>();
+
+        if (savedInstanceState != null && savedInstanceState.containsKey("ingredients")) {
+            ingredients = savedInstanceState.getStringArrayList("ingredients");
+        } else {
+            ingredients = new ArrayList<>();
+        }
+
+
         adapter = new RecyclerAdapter(ingredients);
         recyclerView = v.findViewById(R.id.recycler);
         recyclerView.setAdapter(adapter);
