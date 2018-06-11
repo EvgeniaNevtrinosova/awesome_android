@@ -109,7 +109,6 @@ public class EnterFragment extends Fragment {
             loadingPanel.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    post.cancel();
                     loadingPanel.setVisibility(View.GONE);
                     v.setVisibility(View.VISIBLE);
                 }
@@ -128,7 +127,7 @@ public class EnterFragment extends Fragment {
             getRecipes = networkInteraction.getGetRecipes();
             ingredients.clear();
 
-            if (getRecipes != null) {
+            if (getRecipes != null && getRecipes.size() != 0) {
                 Fragment recipesListFragment = new RecipesListFragment();
 
                 Bundle bundle = new Bundle();

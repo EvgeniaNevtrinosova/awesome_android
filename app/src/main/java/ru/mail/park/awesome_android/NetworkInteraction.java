@@ -1,18 +1,7 @@
 package ru.mail.park.awesome_android;
-
-import android.content.res.Configuration;
-import android.content.res.Resources;
 import android.app.Activity;
-import android.os.Bundle;
 import android.os.Handler;
 import android.os.StrictMode;
-import android.support.annotation.NonNull;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.util.Log;
-import android.view.View;
-import android.content.res.Resources;
-import android.widget.ImageView;
 import android.widget.Toast;
 import com.google.gson.Gson;
 
@@ -63,6 +52,7 @@ public class NetworkInteraction {
             StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder()
                     .permitAll().build();
             StrictMode.setThreadPolicy(policy);
+
             ResponseBody responseBody = post.execute().body();
 
             if (responseBody != null) {
@@ -76,6 +66,7 @@ public class NetworkInteraction {
                 setGetRecipes(parseRecipe(body));
             }
         } catch (IOException e) {
+            post.cancel();
             Toast.makeText(activity, R.string.error_message, Toast.LENGTH_SHORT).show();
         }
     }
