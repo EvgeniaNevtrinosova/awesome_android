@@ -1,11 +1,13 @@
 package ru.mail.park.awesome_android;
 
+import android.content.res.Configuration;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.widget.GridLayoutManager;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -58,11 +60,19 @@ public class RecipesListFragment extends Fragment {
     private void writeListOfRecipes(ArrayList<Recipe> recipes) {
         for (Recipe recipe: recipes) {
             LinearLayout recipeTitle = new LinearLayout(getActivity());
+            LinearLayout.LayoutParams params;
 
-            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.WRAP_CONTENT,
-                    LinearLayout.LayoutParams.WRAP_CONTENT
-            );
+            if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+                params = new LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.MATCH_PARENT,
+                        LinearLayout.LayoutParams.WRAP_CONTENT
+                );
+            } else {
+                params = new LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.WRAP_CONTENT,
+                        LinearLayout.LayoutParams.WRAP_CONTENT
+                );
+            }
 
             int margin_left_and_right = getResources().getInteger(R.integer.recipe_margin_left_and_right);
             int margin_top_and_bottom = getResources().getInteger(R.integer.recipe_margin_top_and_bottom);
@@ -87,6 +97,7 @@ public class RecipesListFragment extends Fragment {
             name.setText(recipe.getName());
             name.setGravity(Gravity.START);
             name.setTextSize(getResources().getInteger(R.integer.recipe_name_text_size));
+
             name.setWidth(getResources().getInteger(R.integer.recipe_name_width));
             name.setPadding(list_padding, list_padding, list_padding, list_padding);
             name.setTextColor(getResources().getColor(R.color.primaryText));

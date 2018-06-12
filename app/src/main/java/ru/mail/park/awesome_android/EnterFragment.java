@@ -1,8 +1,10 @@
 package ru.mail.park.awesome_android;
 
+import android.animation.ValueAnimator;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.content.res.Resources;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -21,6 +23,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 import com.google.gson.Gson;
@@ -34,14 +37,14 @@ import okhttp3.ResponseBody;
 import retrofit2.Call;
 
 public class EnterFragment extends Fragment {
-    private Button addButton;
+    private ImageButton addButton;
     private Button searchButton;
     private RelativeLayout loadingPanel;
     private AutoCompleteTextView enterIngredient;
     private ArrayList<String> ingredients;
     private Call<ResponseBody> post;
     private List<Recipe> getRecipes;
-
+    private ValueAnimator animator;
 
     RecyclerView recyclerView;
     RecyclerAdapter adapter;
@@ -155,6 +158,19 @@ public class EnterFragment extends Fragment {
             String ingredient = enterIngredient.getText().toString();
             hideKeyboard(enterIngredient);
 
+            reset();
+
+            final float endValue = 180f;
+            animator = ValueAnimator.ofFloat(0, endValue);
+            animator.setDuration(500L);
+            animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                @Override
+                public void onAnimationUpdate(final ValueAnimator animation) {
+                    float value = (float) animation.getAnimatedValue();
+                    addButton.setRotation(value);
+                }
+            });
+            animator.start();
 
             if (ingredient.length() == getResources().getInteger(R.integer.empty_size)) {
                 return;
@@ -182,6 +198,14 @@ public class EnterFragment extends Fragment {
         if (inputMethodManager != null) {
             inputMethodManager.hideSoftInputFromWindow(input.getWindowToken(), 0);
         }
+    }
+
+    private void reset() {
+        if (animator != null) {
+            animator.cancel();
+        }
+
+        addButton.setRotation(0);
     }
 
     @Nullable

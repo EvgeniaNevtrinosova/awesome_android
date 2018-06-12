@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/get_list_fr"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -12,13 +12,15 @@
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
         android:hint="@string/recipe_what_you_need"
+        android:layout_alignParentTop="true"
         android:textSize="18sp" />
 
     <LinearLayout
         android:id="@+id/list_of_recipes"
         android:layout_width="match_parent"
         android:layout_height="220dp"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:layout_below="@+id/this_is_recipe">
 
     </LinearLayout>
 
@@ -26,7 +28,8 @@
         android:id="@+id/main_menu_button_from_recipe_list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
         android:text="@string/to_main_menu"
         style="?android:attr/buttonBarButtonStyle"/>
 
-</LinearLayout>
+</RelativeLayout>
