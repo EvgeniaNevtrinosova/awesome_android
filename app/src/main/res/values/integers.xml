@@ -7,12 +7,14 @@
     <integer name="adapter_position">0</integer>
     <integer name="empty_size">0</integer>
     <integer name="recipe_title_padding">16</integer>
-    <integer name="recipe_name_text_size">20</integer>
+    <integer name="recipe_name_text_size">24</integer>
     <integer name="recipe_name_width">800</integer>
-    <integer name="recipe_margin_left_and_right">20</integer>
-    <integer name="recipe_margin_top_and_bottom">30</integer>
-    <integer name="products_list_text_size">20</integer>
+    <integer name="recipe_margin_left_and_right">16</integer>
+    <integer name="recipe_margin_top_and_bottom">32</integer>
+    <integer name="products_list_text_size">16</integer>
     <integer name="products_list_width">1000</integer>
-    <integer name="recipe_border">10</integer>
+    <integer name="recipe_border">8</integer>
+    <integer name="list_padding">8</integer>
     <integer name="recycler_duration">2000</integer>
+    <integer name="border_radius">20</integer>
 </resources>

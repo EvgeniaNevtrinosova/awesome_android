@@ -28,13 +28,15 @@ public class RecipeInformationFragment extends Fragment {
             Toast errorMessage = Toast.makeText(getContext(), R.string.error_message, Toast.LENGTH_SHORT);
             errorMessage.show();
         }
-        recipe = (Recipe) clickRecipe;
+        recipe = (Recipe)clickRecipe;
     }
 
     private void writeRecipe() {
         recipeName.setText(recipe.getName());
+        recipeName.setTextColor(getResources().getColor(R.color.primaryText));
         ArrayList<String> productsList = recipe.getProducts();
         StringBuilder listOfProducts = new StringBuilder();
+        listOfProducts.append("Игредиенты: ");
 
         String prefix = "";
         for (String str: productsList) {
@@ -42,8 +44,11 @@ public class RecipeInformationFragment extends Fragment {
             prefix = getResources().getString(R.string.prefix);
             listOfProducts.append(str);
         }
+
         recipeProducts.setText(listOfProducts.toString());
+        recipeProducts.setTextColor(getResources().getColor(R.color.secondaryText));
         recipeText.setText(recipe.getText());
+        recipeText.setTextColor(getResources().getColor(R.color.primaryText));
     }
 
     private View.OnClickListener onMainClickListener = new View.OnClickListener() {

@@ -75,17 +75,21 @@ public class RecipesListFragment extends Fragment {
 
             GradientDrawable border = new GradientDrawable();
             border.setColor(getResources().getColor(R.color.white));
-            border.setStroke(getResources().getInteger(R.integer.recipe_border), getResources().getColor(R.color.black));
+            border.setStroke(getResources().getInteger(R.integer.recipe_border), getResources().getColor(R.color.colorPrimary));
+            border.setCornerRadius(getResources().getInteger(R.integer.border_radius));
             recipeTitle.setBackground(border);
 
             int padding = getResources().getInteger(R.integer.recipe_title_padding);
             recipeTitle.setPadding(padding, padding, padding, padding);
 
             TextView name = new TextView(getActivity());
+            int list_padding = getResources().getInteger(R.integer.list_padding);
             name.setText(recipe.getName());
             name.setGravity(Gravity.START);
             name.setTextSize(getResources().getInteger(R.integer.recipe_name_text_size));
             name.setWidth(getResources().getInteger(R.integer.recipe_name_width));
+            name.setPadding(list_padding, list_padding, list_padding, list_padding);
+            name.setTextColor(getResources().getColor(R.color.primaryText));
             recipeTitle.addView(name);
 
             TextView products = new TextView(getActivity());
@@ -101,8 +105,9 @@ public class RecipesListFragment extends Fragment {
 
             products.setText(listOfProducts.toString());
             products.setGravity(Gravity.START);
-            products.setTextSize(getResources().getInteger(R.integer.products_list_text_size));
             products.setWidth(getResources().getInteger(R.integer.products_list_width));
+            products.setPadding(list_padding, list_padding, list_padding, list_padding);
+            products.setTextColor(getResources().getColor(R.color.secondaryText));
             recipeTitle.addView(products);
 
             setOnClick(recipeTitle, recipe);

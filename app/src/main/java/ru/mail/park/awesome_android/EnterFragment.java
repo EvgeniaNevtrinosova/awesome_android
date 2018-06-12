@@ -1,5 +1,6 @@
 package ru.mail.park.awesome_android;
 
+import android.content.Context;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.os.Bundle;
@@ -16,6 +17,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
@@ -125,9 +127,9 @@ public class EnterFragment extends Fragment {
             }
 
             getRecipes = networkInteraction.getGetRecipes();
-            ingredients.clear();
 
             if (getRecipes != null && getRecipes.size() != 0) {
+                ingredients.clear();
                 Fragment recipesListFragment = new RecipesListFragment();
 
                 Bundle bundle = new Bundle();
@@ -151,6 +153,8 @@ public class EnterFragment extends Fragment {
         @Override
         public void onClick(View view) {
             String ingredient = enterIngredient.getText().toString();
+            hideKeyboard(enterIngredient);
+
 
             if (ingredient.length() == getResources().getInteger(R.integer.empty_size)) {
                 return;
@@ -172,6 +176,13 @@ public class EnterFragment extends Fragment {
             adapter.notifyItemChanged(getResources().getInteger(R.integer.adapter_position));
         }
     };
+
+    private static void hideKeyboard(final View input) {
+        final InputMethodManager inputMethodManager = (InputMethodManager) input.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+        if (inputMethodManager != null) {
+            inputMethodManager.hideSoftInputFromWindow(input.getWindowToken(), 0);
+        }
+    }
 
     @Nullable
     @Override

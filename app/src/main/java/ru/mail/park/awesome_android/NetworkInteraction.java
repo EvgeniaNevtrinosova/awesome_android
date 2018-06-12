@@ -59,6 +59,7 @@ public class NetworkInteraction {
                 String body = responseBody.string();
 
                 if (body != null && body.equals(activity.getResources().getString(R.string.empty_response_body))) {
+                    post.cancel();
                     Toast.makeText(activity, R.string.empty_recipes_list, Toast.LENGTH_SHORT).show();
                     return;
                 }
