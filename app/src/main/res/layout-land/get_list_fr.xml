@@ -11,18 +11,27 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
-        android:hint="@string/recipe_what_you_need"
+        android:text="@string/recipe_what_you_need"
+        android:textColor="@color/primaryText"
         android:layout_alignParentTop="true"
-        android:textSize="18sp" />
+        android:textSize="24sp" />
 
-    <LinearLayout
-        android:id="@+id/list_of_recipes"
+
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="220dp"
-        android:orientation="vertical"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/main_menu_button_from_recipe_list"
+        android:layout_alignParentStart="true"
         android:layout_below="@+id/this_is_recipe">
 
-    </LinearLayout>
+        <LinearLayout
+            android:id="@+id/list_of_recipes"
+            android:layout_width="match_parent"
+            android:layout_height="220dp"
+            android:orientation="vertical">
+
+        </LinearLayout>
+    </ScrollView>
 
     <Button
         android:id="@+id/main_menu_button_from_recipe_list"

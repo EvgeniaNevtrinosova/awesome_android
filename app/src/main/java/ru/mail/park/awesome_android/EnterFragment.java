@@ -17,6 +17,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
@@ -192,6 +193,9 @@ public class EnterFragment extends Fragment {
             adapter.notifyItemChanged(getResources().getInteger(R.integer.adapter_position));
         }
     };
+
+
+
 
     private static void hideKeyboard(final View input) {
         final InputMethodManager inputMethodManager = (InputMethodManager) input.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);

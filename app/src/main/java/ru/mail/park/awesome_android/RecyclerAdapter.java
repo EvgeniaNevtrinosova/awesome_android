@@ -9,6 +9,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -54,8 +55,8 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyHold
                 notifyItemRangeChanged(holder.getAdapterPosition(), ingredients.size());
                 setAnimation(view);
             }
-        })
-        ;
+        });
+
     }
 
     private void setAnimation(View viewToAnimate) {
