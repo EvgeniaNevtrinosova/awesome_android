@@ -194,9 +194,6 @@ public class EnterFragment extends Fragment {
         }
     };
 
-
-
-
     private static void hideKeyboard(final View input) {
         final InputMethodManager inputMethodManager = (InputMethodManager) input.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
         if (inputMethodManager != null) {

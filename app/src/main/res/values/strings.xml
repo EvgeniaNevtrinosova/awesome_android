@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">awesome_android</string>
+    <string name="app_name">Mamkin Povar</string>
     <string name="enter_ingredient">Выберите ингредиенты:</string>
     <string name="add">Добавить</string>
     <string name="base_url">http://195.133.1.169:8082/</string>
