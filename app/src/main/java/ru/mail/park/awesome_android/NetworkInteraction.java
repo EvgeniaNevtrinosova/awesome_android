@@ -1,41 +1,40 @@
 package ru.mail.park.awesome_android;
 import android.app.Activity;
-import android.os.Handler;
 import android.os.StrictMode;
+import android.view.View;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 import com.google.gson.Gson;
-
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
-
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
-
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class NetworkInteraction {
-    List<Recipe> getRecipes = new ArrayList<>();
+class NetworkInteraction {
+    private List<Recipe> getRecipes = new ArrayList<>();
 
-    public List<Recipe> getGetRecipes() {
+    List<Recipe> getGetRecipes() {
         return getRecipes;
     }
 
-    public void setGetRecipes(List<Recipe> getRecipes) {
+    private void setGetRecipes(List<Recipe> getRecipes) {
         this.getRecipes = getRecipes;
     }
 
     private static final Gson GSON = new GsonBuilder()
             .create();
 
-    public void DataTransmissionAndReception(final ArrayList<String> ingredients, final Handler handler, Call<ResponseBody> post, final Activity activity) throws IOException {
+    void DataTransmissionAndReception(final ArrayList<String> ingredients, final Activity activity, RelativeLayout loadingPanel, final View v) throws IOException {
         JsonObject json = new JsonObject();
+        Call<ResponseBody> post;
 
         json.addProperty(activity.getResources().getString(R.string.products_property), String.valueOf(ingredients));
 
@@ -60,6 +59,8 @@ public class NetworkInteraction {
 
                 if (body != null && body.equals(activity.getResources().getString(R.string.empty_response_body))) {
                     post.cancel();
+                    loadingPanel.setVisibility(View.GONE);
+                    v.setVisibility(View.VISIBLE);
                     Toast.makeText(activity, R.string.empty_recipes_list, Toast.LENGTH_SHORT).show();
                     return;
                 }
@@ -68,11 +69,13 @@ public class NetworkInteraction {
             }
         } catch (IOException e) {
             post.cancel();
+            loadingPanel.setVisibility(View.GONE);
+            v.setVisibility(View.VISIBLE);
             Toast.makeText(activity, R.string.error_message, Toast.LENGTH_SHORT).show();
         }
     }
 
-    public List<Recipe> parseRecipe(final String body) throws IOException {
+    private List<Recipe> parseRecipe(final String body) throws IOException {
         try {
             Type listType = new TypeToken<List<Recipe>>() {
             }.getType();
@@ -81,6 +84,4 @@ public class NetworkInteraction {
             throw new IOException(e);
         }
     }
-
-
 }

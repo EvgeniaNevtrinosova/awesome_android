@@ -4,7 +4,6 @@ import android.animation.ValueAnimator;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.content.res.Resources;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -17,7 +16,6 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.Gravity;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
@@ -27,15 +25,11 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import okhttp3.ResponseBody;
-import retrofit2.Call;
 
 public class EnterFragment extends Fragment {
     private ImageButton addButton;
@@ -43,8 +37,6 @@ public class EnterFragment extends Fragment {
     private RelativeLayout loadingPanel;
     private AutoCompleteTextView enterIngredient;
     private ArrayList<String> ingredients;
-    private Call<ResponseBody> post;
-    private List<Recipe> getRecipes;
     private ValueAnimator animator;
 
     RecyclerView recyclerView;
@@ -52,8 +44,6 @@ public class EnterFragment extends Fragment {
     NetworkInteraction networkInteraction = new NetworkInteraction();
 
     private Handler handler = new MyHandler(this);
-    private static final Gson GSON = new GsonBuilder()
-            .create();
 
     public static EnterFragment newInstance() {
         Bundle args = new Bundle();
@@ -105,6 +95,8 @@ public class EnterFragment extends Fragment {
     private View.OnClickListener onSearchButtonClickListener = new View.OnClickListener() {
         @Override
         public void onClick(final View v) {
+            List<Recipe> getRecipes;
+
             if (ingredients.size() == getResources().getInteger(R.integer.empty_size)) {
                 Toast.makeText(getActivity(), R.string.empty_error_message, Toast.LENGTH_SHORT).show();
                 return;
@@ -125,7 +117,7 @@ public class EnterFragment extends Fragment {
             }
 
             try {
-                networkInteraction.DataTransmissionAndReception(ingredients, handler, post, getActivity());
+                networkInteraction.DataTransmissionAndReception(ingredients, getActivity(), loadingPanel, v);
             } catch (IOException e) {
                 e.printStackTrace();
             }

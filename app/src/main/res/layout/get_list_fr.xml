@@ -27,6 +27,8 @@
             android:id="@+id/list_of_recipes"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="8dp"
             android:orientation="vertical" />
 
     </ScrollView>

@@ -48,11 +48,11 @@ public class RecipeInformationFragment extends Fragment {
         recipeProducts.setText(listOfProducts.toString());
         recipeProducts.setTextColor(getResources().getColor(R.color.secondaryText));
 
-        StringBuilder text = new StringBuilder();
-        text.append("Приготовление: ");
-        text.append(recipe.getText());
+        String text = "";
+        text += "Приготовление: ";
+        text += recipe.getText();
 
-        recipeText.setText(text.toString());
+        recipeText.setText(text);
         recipeText.setTextColor(getResources().getColor(R.color.primaryText));
     }
 

@@ -7,7 +7,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.widget.GridLayoutManager;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -78,6 +77,8 @@ public class RecipesListFragment extends Fragment {
             int margin_top_and_bottom = getResources().getInteger(R.integer.recipe_margin_top_and_bottom);
 
             params.setMargins(margin_left_and_right, margin_top_and_bottom, margin_left_and_right, margin_top_and_bottom);
+            params.setMarginStart(margin_left_and_right);
+            params.setMarginEnd(margin_left_and_right);
 
             recipeTitle.setLayoutParams(params);
             recipeTitle.setOrientation(LinearLayout.VERTICAL);
