@@ -25,7 +25,6 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
-import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -41,7 +40,6 @@ public class EnterFragment extends Fragment {
 
     RecyclerView recyclerView;
     RecyclerAdapter adapter;
-    NetworkInteraction networkInteraction = new NetworkInteraction();
 
     private Handler handler = new MyHandler(this);
 
@@ -65,6 +63,44 @@ public class EnterFragment extends Fragment {
             frag.get().searchButton.setVisibility(View.VISIBLE);
         }
     }
+
+    private ListenerHandler<Api.OnRecipesGetListener> recipeHandler;
+
+    private Api.OnRecipesGetListener recipeListener = new Api.OnRecipesGetListener() {
+        @Override
+        public void onRecipesSuccess(List<Recipe> recipes) {
+
+            if (recipes != null && recipes.size() != 0) {
+                ingredients.clear();
+                Fragment recipesListFragment = new RecipesListFragment();
+
+                Bundle bundle = new Bundle();
+                bundle.putInt("size", recipes.size());
+
+                for (int i = 0; i < recipes.size(); i++) {
+                    bundle.putSerializable("recipe " + i, recipes.get(i));
+                }
+
+                recipesListFragment.setArguments(bundle);
+                FragmentManager fragmentManager = getFragmentManager();
+                fragmentManager.beginTransaction()
+                        .replace(R.id.fragmentContainer, recipesListFragment, getResources().getString(R.string.recipe_tag))
+                        .addToBackStack(null)
+                        .commit();
+            } else {
+                searchButton.setVisibility(View.VISIBLE);
+                loadingPanel.setVisibility(View.GONE);
+                Toast.makeText(getActivity(), R.string.empty_recipes_list, Toast.LENGTH_SHORT).show();
+            }
+        }
+
+        @Override
+        public void onRecipesError(Exception error) {
+            searchButton.setVisibility(View.VISIBLE);
+            loadingPanel.setVisibility(View.GONE);
+            Toast.makeText(getActivity(), R.string.error_message, Toast.LENGTH_SHORT).show();
+        }
+    };
 
     private TextWatcher onTextChangedListener = new TextWatcher() {
         @Override
@@ -95,7 +131,6 @@ public class EnterFragment extends Fragment {
     private View.OnClickListener onSearchButtonClickListener = new View.OnClickListener() {
         @Override
         public void onClick(final View v) {
-            List<Recipe> getRecipes;
 
             if (ingredients.size() == getResources().getInteger(R.integer.empty_size)) {
                 Toast.makeText(getActivity(), R.string.empty_error_message, Toast.LENGTH_SHORT).show();
@@ -116,32 +151,12 @@ public class EnterFragment extends Fragment {
                 loadingPanel.setVisibility(View.VISIBLE);
             }
 
-            try {
-                networkInteraction.DataTransmissionAndReception(ingredients, getActivity(), loadingPanel, v);
-            } catch (IOException e) {
-                e.printStackTrace();
+            if (recipeHandler != null) {
+                recipeHandler.unregister();
             }
 
-            getRecipes = networkInteraction.getGetRecipes();
 
-            if (getRecipes != null && getRecipes.size() != 0) {
-                ingredients.clear();
-                Fragment recipesListFragment = new RecipesListFragment();
-
-                Bundle bundle = new Bundle();
-                bundle.putInt("size", getRecipes.size());
-
-                for (int i = 0; i < getRecipes.size(); i++) {
-                    bundle.putSerializable("recipe " + i, getRecipes.get(i));
-                }
-
-                recipesListFragment.setArguments(bundle);
-                FragmentManager fragmentManager = getFragmentManager();
-                fragmentManager.beginTransaction()
-                        .replace(R.id.fragmentContainer, recipesListFragment, getResources().getString(R.string.recipe_tag))
-                        .addToBackStack(null)
-                        .commit();
-            }
+            recipeHandler = Api.getInstance().getRecipes(ingredients, recipeListener);
         }
     };
 
